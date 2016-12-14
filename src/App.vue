@@ -1,16 +1,19 @@
 <template>
   <div id="app">
     <app-header></app-header>
+    <palette-container></palette-container>
   </div>
 </template>
 
 <script>
-import appHeader from './components/Header';
+import AppHeader from './components/Header';
+import PaletteContainer from './components/PaletteContainer';
 
 export default {
   name: 'app',
   components: {
-    appHeader,
+    AppHeader,
+    PaletteContainer,
   },
 };
 </script>
