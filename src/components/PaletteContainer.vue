@@ -1,6 +1,8 @@
 <template>
   <div>
-    <palette-item></palette-item>
+    <palette-item
+      v-for="palette in $store.state.palettes"
+     :colors="palette"></palette-item>
   </div>
 </template>
 
