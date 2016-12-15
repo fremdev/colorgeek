@@ -12,6 +12,7 @@
     "lint": "eslint --ext .js,.vue src test/unit/specs"
   },
   "dependencies": {
+    "clipboard": "^1.5.16",
     "vue": "^2.1.0",
     "vuex": "^2.0.0"
   },
