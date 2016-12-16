@@ -7,12 +7,14 @@
 
     <div class="palette-item__row">
       <palette-color
+        @colorWasChanged="currentColors.color1 = {hex: $event}"
         :editMode="editMode"
         :color="colors.color1.hex"
         :isBig="true"
       ></palette-color>
 
       <palette-color
+        @colorWasChanged="currentColors.color2 = {hex: $event}"
         :editMode="editMode"
         :color="colors.color2.hex"
         :isBig="true"
@@ -21,18 +23,21 @@
 
     <div class="palette-item__row">
       <palette-color
+        @colorWasChanged="currentColors.color3 = {hex: $event}"
         :editMode="editMode"
         :color="colors.color3.hex"
         :isBig="false"
       ></palette-color>
 
       <palette-color
+        @colorWasChanged="currentColors.color4 = {hex: $event}"
         :editMode="editMode"
         :color="colors.color4.hex"
         :isBig="false"
       ></palette-color>
 
       <palette-color
+        @colorWasChanged="currentColors.color5 = {hex: $event}"
         :editMode="editMode"
         :color="colors.color5.hex"
         :isBig="false"
@@ -41,7 +46,7 @@
     <div class="palette-item__footer">
       <button
         class="btn btn-outline-primary"
-        @click="editMode = !editMode"
+        @click="editMode ? savePalette() : startEditMode()"
         >{{editMode ? 'Save' : 'Edit'}}</button>
       <div class="color-controls">
         <label class="form-check-label">
@@ -79,7 +84,7 @@ export default {
     /* eslint-disable no-new */
     new Clipboard('.palette-item__color');
   },
-  props: ['colors'],
+  props: ['colors', 'palette'],
   components: {
     PaletteColor,
   },
@@ -87,7 +92,17 @@ export default {
     return {
       editMode: false,
       colorType: 'hex',
+      currentColors: { ...this.colors },
     };
+  },
+  methods: {
+    startEditMode() {
+      this.editMode = true;
+    },
+    savePalette() {
+      this.editMode = false;
+      console.log('Save current palette');
+    },
   },
 };
 </script>

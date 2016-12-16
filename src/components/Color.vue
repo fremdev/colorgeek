@@ -9,7 +9,7 @@
     :class="['color-picker', {'color-picker--big': isBig}]"
     :style="{backgroundColor: currentColor}">
     <label class="color-picker__label">
-      <input class="color-picker__input" type="color" v-model="currentColor">
+      <input class="color-picker__input" type="color" :value="currentColor" @input="setCurrentColor($event.target.value)">
     </label>
   </div>
 </template>
@@ -21,6 +21,12 @@ export default {
     return {
       currentColor: this.color,
     };
+  },
+  methods: {
+    setCurrentColor(color) {
+      this.currentColor = color;
+      this.$emit('colorWasChanged', color.slice(1));
+    },
   },
 };
 </script>
