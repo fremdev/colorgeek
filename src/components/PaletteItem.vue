@@ -7,40 +7,42 @@
 
     <div class="palette-item__row">
       <palette-color
-        @colorWasChanged="currentColors.color1 = {hex: $event}"
+        @colorWasChanged="currentColors.color1 = $event"
         :editMode="editMode"
-        :color="colors.color1.hex"
+        :color="colors.color1"
+        :isHex="colorType === 'hex'"
         :isBig="true"
       ></palette-color>
 
       <palette-color
-        @colorWasChanged="currentColors.color2 = {hex: $event}"
+        @colorWasChanged="currentColors.color2 = $event"
         :editMode="editMode"
-        :color="colors.color2.hex"
+        :color="colors.color2"
+        :isHex="colorType === 'hex'"
         :isBig="true"
       ></palette-color>
     </div>
 
     <div class="palette-item__row">
       <palette-color
-        @colorWasChanged="currentColors.color3 = {hex: $event}"
+        @colorWasChanged="currentColors.color3 = $event"
         :editMode="editMode"
-        :color="colors.color3.hex"
-        :isBig="false"
+        :color="colors.color3"
+        :isHex="colorType === 'hex'"
       ></palette-color>
 
       <palette-color
-        @colorWasChanged="currentColors.color4 = {hex: $event}"
+        @colorWasChanged="currentColors.color4 = $event"
         :editMode="editMode"
-        :color="colors.color4.hex"
-        :isBig="false"
+        :color="colors.color4"
+        :isHex="colorType === 'hex'"
       ></palette-color>
 
       <palette-color
-        @colorWasChanged="currentColors.color5 = {hex: $event}"
+        @colorWasChanged="currentColors.color5 = $event"
         :editMode="editMode"
-        :color="colors.color5.hex"
-        :isBig="false"
+        :color="colors.color5"
+        :isHex="colorType === 'hex'"
       ></palette-color>
     </div>
     <div class="palette-item__footer">
@@ -77,6 +79,7 @@
 
 <script>
 import Clipboard from 'clipboard';
+import { mapActions } from 'vuex';
 import PaletteColor from './Color';
 
 export default {
@@ -96,12 +99,18 @@ export default {
     };
   },
   methods: {
+    ...mapActions([
+      'updatePalette',
+    ]),
     startEditMode() {
       this.editMode = true;
     },
     savePalette() {
       this.editMode = false;
-      console.log('Save current palette');
+      this.updatePalette({
+        id: this.palette,
+        colors: this.currentColors,
+      });
     },
   },
 };

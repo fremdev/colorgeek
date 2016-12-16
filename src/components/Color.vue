@@ -3,7 +3,7 @@
     v-if="!editMode"
     :class="['palette-item__color', {'palette-item__color--big': isBig}]"
     :style="{backgroundColor: '#' + color}"
-    :data-clipboard-text="'#' + color"
+    :data-clipboard-text="isHex ? '#' + color : rgbColor"
   ></div>
   <div v-else
     :class="['color-picker', {'color-picker--big': isBig}]"
@@ -15,8 +15,27 @@
 </template>
 
 <script>
+import { hexToRgb } from '../helpers';
+
 export default {
-  props: ['editMode', 'color', 'isBig'],
+  props: {
+    editMode: {
+      type: Boolean,
+      required: true,
+    },
+    color: {
+      type: String,
+      required: true,
+    },
+    isBig: {
+      type: Boolean,
+      default: false,
+    },
+    isHex: {
+      type: Boolean,
+      default: true,
+    },
+  },
   data() {
     return {
       currentColor: this.color,
@@ -26,6 +45,11 @@ export default {
     setCurrentColor(color) {
       this.currentColor = color;
       this.$emit('colorWasChanged', color.slice(1));
+    },
+  },
+  computed: {
+    rgbColor() {
+      return hexToRgb(this.color);
     },
   },
 };
