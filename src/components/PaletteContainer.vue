@@ -10,6 +10,7 @@
 import PaletteItem from './PaletteItem';
 
 export default {
+  name: 'PaletteContainer',
   components: {
     PaletteItem,
   },

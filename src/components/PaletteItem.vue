@@ -2,7 +2,7 @@
   <div class="palette-item">
     <div class="palette-item__header">
       <h5>Palette by Username</h5>
-      <span>Like</span>
+      <span class="likes__icon">&hearts;</span>
     </div>
 
     <div class="palette-item__row">
@@ -50,11 +50,10 @@
         class="btn btn-outline-primary"
         @click="editMode ? savePalette() : startEditMode()"
         >{{editMode ? 'Save' : 'Edit'}}</button>
+      <button
+        class="btn btn-outline-primary"
+      >Make Public</button>
       <div class="color-controls">
-        <label class="form-check-label">
-          <input class="form-check-input" type="checkbox" value="" checked>
-          Public
-        </label>
         <div class="color-type">
           <input
             class="form-check-input"
@@ -143,5 +142,10 @@ h5 {
   display: flex;
   justify-content: space-between;
   padding: 10px 20px;
+}
+
+.likes__icon {
+  font-size: 32px;
+  line-height: 24px;
 }
 </style>
