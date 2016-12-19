@@ -48,7 +48,7 @@
     <div class="palette-item__footer">
       <button
         class="btn btn-outline-primary"
-        @click="editMode ? savePalette() : startEditMode()"
+        @click="editMode ? updatePalette() : startEditMode()"
         >{{editMode ? 'Save' : 'Edit'}}</button>
       <button
         class="btn btn-outline-primary"
@@ -78,8 +78,8 @@
 
 <script>
 import Clipboard from 'clipboard';
-import { mapActions } from 'vuex';
 import PaletteColor from './Color';
+import db from '../firebase';
 
 export default {
   created() {
@@ -90,6 +90,9 @@ export default {
   components: {
     PaletteColor,
   },
+  firebase: {
+    palettes: db.ref('palettes'),
+  },
   data() {
     return {
       editMode: false,
@@ -98,18 +101,12 @@ export default {
     };
   },
   methods: {
-    ...mapActions([
-      'updatePalette',
-    ]),
     startEditMode() {
       this.editMode = true;
     },
-    savePalette() {
+    updatePalette() {
       this.editMode = false;
-      this.updatePalette({
-        id: this.palette,
-        colors: this.currentColors,
-      });
+      this.$firebaseRefs.palettes.child(this.palette).child('colors').set(this.currentColors);
     },
   },
 };
