@@ -1,15 +1,21 @@
 <template>
   <div class="palette-item">
     <div class="palette-item__header">
-      <h5>Palette by Username</h5>
-      <span class="likes__icon">&hearts;</span>
+      <h5>Palette by {{ palette.author }}</h5>
+      <span>
+        <span class="likes__num">{{ palette.likes ? palette.likes : '' }}</span>
+        <span
+         class="likes__icon"
+         @click="handleLike"
+        >&hearts;</span>
+      </span>
     </div>
 
     <div class="palette-item__row">
       <palette-color
         @colorWasChanged="currentColors.color1 = $event"
         :editMode="editMode"
-        :color="colors.color1"
+        :color="palette.colors.color1"
         :isHex="colorType === 'hex'"
         :isBig="true"
       ></palette-color>
@@ -17,7 +23,7 @@
       <palette-color
         @colorWasChanged="currentColors.color2 = $event"
         :editMode="editMode"
-        :color="colors.color2"
+        :color="palette.colors.color2"
         :isHex="colorType === 'hex'"
         :isBig="true"
       ></palette-color>
@@ -27,21 +33,21 @@
       <palette-color
         @colorWasChanged="currentColors.color3 = $event"
         :editMode="editMode"
-        :color="colors.color3"
+        :color="palette.colors.color3"
         :isHex="colorType === 'hex'"
       ></palette-color>
 
       <palette-color
         @colorWasChanged="currentColors.color4 = $event"
         :editMode="editMode"
-        :color="colors.color4"
+        :color="palette.colors.color4"
         :isHex="colorType === 'hex'"
       ></palette-color>
 
       <palette-color
         @colorWasChanged="currentColors.color5 = $event"
         :editMode="editMode"
-        :color="colors.color5"
+        :color="palette.colors.color5"
         :isHex="colorType === 'hex'"
       ></palette-color>
     </div>
@@ -79,14 +85,19 @@
 <script>
 import Clipboard from 'clipboard';
 import PaletteColor from './Color';
-import db from '../firebase';
+import { db } from '../firebase';
 
 export default {
   created() {
     /* eslint-disable no-new */
     new Clipboard('.palette-item__color');
   },
-  props: ['colors', 'palette'],
+  props: {
+    palette: {
+      type: Object,
+      required: true,
+    },
+  },
   components: {
     PaletteColor,
   },
@@ -97,7 +108,7 @@ export default {
     return {
       editMode: false,
       colorType: 'hex',
-      currentColors: { ...this.colors },
+      currentColors: { ...this.palette.colors },
     };
   },
   methods: {
@@ -106,7 +117,10 @@ export default {
     },
     updatePalette() {
       this.editMode = false;
-      this.$firebaseRefs.palettes.child(this.palette).child('colors').set(this.currentColors);
+      this.$firebaseRefs.palettes.child(this.palette['.key']).child('colors').set(this.currentColors);
+    },
+    handleLike() {
+      this.$firebaseRefs.palettes.child(this.palette['.key']).child('likes').set(this.palette.likes + 1);
     },
   },
 };
@@ -144,5 +158,10 @@ h5 {
 .likes__icon {
   font-size: 32px;
   line-height: 24px;
+  padding: 5px;
+}
+.likes__num {
+  font-size: 28px;
+  line-height: 32px;
 }
 </style>

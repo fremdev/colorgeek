@@ -2,8 +2,9 @@ import firebase from 'firebase';
 
 const firebaseApp = firebase.initializeApp({
   databaseURL: process.env.DATABASE_URL,
+  apiKey: process.env.API_KEY,
 });
 
-const db = firebaseApp.database();
+export const db = firebaseApp.database();
 
-export default db;
+export default firebase;
