@@ -42,7 +42,7 @@ export default {
   methods: {
     createUser() {
       firebase.auth().createUserWithEmailAndPassword(this.email, this.password).catch((error) => {
-        console.log('Registration error:', error.code);
+        console.log('Registration error:', error.message);
       });
     },
   },

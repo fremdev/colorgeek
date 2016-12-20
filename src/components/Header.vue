@@ -4,7 +4,7 @@
       <router-link class="logo__title" tag="h1" to="/">ColorGeek</router-link>
       <p>Make your color palette on ColorGeek</p>
     </div>
-    <nav-bar></nav-bar>
+    <nav-bar :user="currentUser"></nav-bar>
   </div>
 
 </template>
@@ -15,6 +15,11 @@ import NavBar from './NavBar';
 export default {
   components: {
     NavBar,
+  },
+  computed: {
+    currentUser() {
+      return this.$store.state.currentUser;
+    },
   },
 };
 </script>

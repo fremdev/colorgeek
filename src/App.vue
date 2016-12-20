@@ -7,6 +7,7 @@
 
 <script>
 import firebase from 'firebase';
+import { mapActions } from 'vuex';
 import AppHeader from './components/Header';
 
 export default {
@@ -16,14 +17,20 @@ export default {
   },
   created() {
     firebase.auth().onAuthStateChanged((user) => {
+      // User is signed in.
       if (user) {
-        console.log('User loggedIN from App.vue');
-    // User is signed in.
+        this.setCurrentUser({ email: user.email, uid: user.uid });
       } else {
-    // No user is signed in.
-        console.log('User loggeOUT from App.vue');
+        // No user is signed in.
+        this.clearCurrentUser();
       }
     });
+  },
+  methods: {
+    ...mapActions({
+      setCurrentUser: 'setCurrentUser',
+      clearCurrentUser: 'clearCurrentUser',
+    }),
   },
 };
 </script>

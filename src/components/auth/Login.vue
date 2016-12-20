@@ -42,10 +42,6 @@ export default {
   methods: {
     tryLogin() {
       firebase.auth().signInWithEmailAndPassword(this.email, this.password)
-        .then(() => {
-          const user = firebase.auth().currentUser;
-          console.log(user);
-        })
         .catch((error) => {
           console.log('Login error:', error.message);
         });
