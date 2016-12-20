@@ -9,7 +9,7 @@
             class="form-control"
             aria-describedby="emailHelp"
             placeholder="Enter email"
-            v-model="username"
+            v-model="email"
           >
         </label>
       </div>
@@ -29,17 +29,26 @@
 </template>
 
 <script>
+import firebase from 'firebase';
+
 export default {
   name: 'Login',
   data() {
     return {
-      username: '',
+      email: '',
       password: '',
     };
   },
   methods: {
     tryLogin() {
-      console.log('login');
+      firebase.auth().signInWithEmailAndPassword(this.email, this.password)
+        .then(() => {
+          const user = firebase.auth().currentUser;
+          console.log(user);
+        })
+        .catch((error) => {
+          console.log('Login error:', error.message);
+        });
     },
   },
 };

@@ -10,12 +10,22 @@
       class="menu-item"
       activeClass="menu-item--active"
     >Sign In</router-link>
+    <span
+      class="menu-item"
+      @click.prevent="onLogout"
+    >Log Out</span>
   </div>
 </template>
 
 <script>
-export default {
+import firebase from 'firebase';
 
+export default {
+  methods: {
+    onLogout() {
+      firebase.auth().signOut();
+    },
+  },
 };
 </script>
 
