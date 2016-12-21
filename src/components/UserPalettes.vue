@@ -27,8 +27,5 @@ export default {
       return [].concat(this.palettes).reverse();
     },
   },
-  // firebase: {
-  //   palettes: db.ref(this.user.uid).orderByKey().limitToLast(6),
-  // },
 };
 </script>

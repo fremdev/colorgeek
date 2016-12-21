@@ -2,7 +2,11 @@
   <div class="palette-container">
     <palette-item
       v-for="palette in palettes"
-     :palette="palette" :user="user" :key="palette['.key']"></palette-item>
+      :palette="palette"
+      :user="user"
+      :key="palette['.key']"
+      :isPublic="isPublic"
+      ></palette-item>
   </div>
 </template>
 
@@ -17,6 +21,9 @@ export default {
     },
     user: {
       type: Object,
+    },
+    isPublic: {
+      type: Boolean,
     },
   },
   components: {

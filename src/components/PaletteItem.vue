@@ -52,14 +52,20 @@
       ></palette-color>
     </div>
     <div class="palette-item__footer">
-      <button
-        class="btn btn-outline-primary"
-        @click="editMode ? updatePalette() : startEditMode()"
-        >{{editMode ? 'Save' : 'Edit'}}</button>
-      <button
-        class="btn btn-outline-primary"
-        @click="palette.public ? undefined : makePublic()"
-      >Make Public</button>
+      <div
+        class="edit-buttons"
+        v-if="!isPublic && !palette.public"
+      >
+        <button
+          class="btn btn-outline-primary"
+          @click="editMode ? updatePalette() : startEditMode()"
+          >{{editMode ? 'Save' : 'Edit'}}</button>
+        <button
+          class="btn btn-outline-primary"
+          @click="makePublic()"
+          :disabled="palette.public"
+        >Make Public</button>
+      </div>
       <div class="color-controls">
         <div class="color-type">
           <input
@@ -102,12 +108,12 @@ export default {
     user: {
       type: Object,
     },
+    isPublic: {
+      type: Boolean,
+    },
   },
   components: {
     PaletteColor,
-  },
-  firebase: {
-    palettes: db.ref('palettes'),
   },
   data() {
     return {
@@ -122,29 +128,26 @@ export default {
     },
     updatePalette() {
       this.editMode = false;
-      this.$firebaseRefs.palettes.child(this.palette['.key']).child('colors').set(this.currentColors);
+      db.ref(`authors/${this.user.uid}/${this.palette['.key']}/colors`).set(this.currentColors);
     },
     changeLikes() {
       const diff = this.isLiked['.value'] ? -1 : 1;
-      this.$firebaseRefs.palettes.child(this.palette['.key']).child('likes').set(this.palette.likes + diff);
+      db.ref(`authors/${this.user.uid}/${this.palette['.key']}/likes`).set(this.palette.likes + diff);
 
-      db.ref().child('public').child(this.palette['.key']).child('likes')
-      .set(this.palette.likes + diff);
+      if (this.palette.public) {
+        db.ref().child('public').child(this.palette['.key']).child('likes')
+        .set(this.palette.likes + diff);
+      }
 
-      db.ref().child('authors').child(this.user.uid).child(this.palette['.key'])
-      .child('likes')
-      .set(this.palette.likes + diff);
-
-      this.$firebaseRefs.isLiked.set(this.isLiked['.value'] ? null : true);
+      db.ref(`likes/${this.user.uid}/${this.palette['.key']}`).set(this.isLiked['.value'] ? null : true);
     },
     makePublic() {
-      db.ref().child('public').child(this.palette['.key']).set({
-        author: this.palette.author,
+      db.ref(`public/${this.palette['.key']}`).set({
+        author: this.user,
         colors: this.palette.colors,
         likes: this.palette.likes,
-      })
-      .then(() => {
-        this.$firebaseRefs.palettes.child(this.palette['.key']).child('public').set(true);
+      }).then(() => {
+        db.ref(`authors/${this.user.uid}/${this.palette['.key']}/public`).set(true);
       });
     },
   },

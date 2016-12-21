@@ -49,25 +49,18 @@ export default {
       firebase.auth().signOut();
     },
     addNewPalette() {
-      const newPaletteRef = db.ref().child('palettes').push();
-      const initialColors = {
-        color1: 'ffffff',
-        color2: 'ffffff',
-        color3: 'ffffff',
-        color4: 'ffffff',
-        color5: 'ffffff',
+      const newPaletteRef = db.ref().child('authors').child(this.user.uid).push();
+      const initialPalette = {
+        colors: {
+          color1: 'ffffff',
+          color2: 'ffffff',
+          color3: 'ffffff',
+          color4: 'ffffff',
+          color5: 'ffffff',
+        },
+        likes: 0,
       };
-      newPaletteRef.set({
-        author: this.user,
-        colors: initialColors,
-        likes: 0,
-      });
-
-      db.ref().child('authors').child(this.user.uid).child(newPaletteRef.key)
-      .set({
-        colors: initialColors,
-        likes: 0,
-      });
+      newPaletteRef.set(initialPalette);
     },
   },
 };

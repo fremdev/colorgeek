@@ -3,6 +3,7 @@
     <palette-container
       :user="currentUser"
       :palettes="reversedPalettes"
+      :isPublic="true"
     ></palette-container>
   </div>
 </template>
@@ -25,7 +26,7 @@ export default {
     },
   },
   firebase: {
-    palettes: db.ref('palettes').orderByKey().limitToLast(6),
+    palettes: db.ref('public').orderByKey().limitToLast(6),
   },
 };
 </script>
