@@ -1,7 +1,7 @@
 <template>
   <div class="palette-item">
     <div class="palette-item__header">
-      <h5>Palette by {{ palette.author.nickname }}</h5>
+      <h5>Palette by {{ palette.author ? palette.author.nickname : user.nickname }}</h5>
       <span>
         <span class="likes__num">{{ palette.likes ? palette.likes : '' }}</span>
         <span
@@ -57,7 +57,8 @@
         @click="editMode ? updatePalette() : startEditMode()"
         >{{editMode ? 'Save' : 'Edit'}}</button>
       <button
-        class="btn btn-outline-primary" disabled
+        class="btn btn-outline-primary"
+        @click="palette.public ? undefined : makePublic()"
       >Make Public</button>
       <div class="color-controls">
         <div class="color-type">
@@ -126,7 +127,25 @@ export default {
     changeLikes() {
       const diff = this.isLiked['.value'] ? -1 : 1;
       this.$firebaseRefs.palettes.child(this.palette['.key']).child('likes').set(this.palette.likes + diff);
+
+      db.ref().child('public').child(this.palette['.key']).child('likes')
+      .set(this.palette.likes + diff);
+
+      db.ref().child('authors').child(this.user.uid).child(this.palette['.key'])
+      .child('likes')
+      .set(this.palette.likes + diff);
+
       this.$firebaseRefs.isLiked.set(this.isLiked['.value'] ? null : true);
+    },
+    makePublic() {
+      db.ref().child('public').child(this.palette['.key']).set({
+        author: this.palette.author,
+        colors: this.palette.colors,
+        likes: this.palette.likes,
+      })
+      .then(() => {
+        this.$firebaseRefs.palettes.child(this.palette['.key']).child('public').set(true);
+      });
     },
   },
 };

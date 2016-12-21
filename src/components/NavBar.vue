@@ -16,6 +16,11 @@
       <span
         class="menu-status"
       >Logged as {{ user.nickname }}</span>
+      <router-link
+        to="/my-palettes"
+        class="menu-item"
+        activeClass="menu-item--active"
+      >My Palettes</router-link>
       <span
         class="menu-item"
         @click="addNewPalette"
@@ -44,15 +49,23 @@ export default {
       firebase.auth().signOut();
     },
     addNewPalette() {
-      db.ref().child('palettes').push({
+      const newPaletteRef = db.ref().child('palettes').push();
+      const initialColors = {
+        color1: 'ffffff',
+        color2: 'ffffff',
+        color3: 'ffffff',
+        color4: 'ffffff',
+        color5: 'ffffff',
+      };
+      newPaletteRef.set({
         author: this.user,
-        colors: {
-          color1: 'ffffff',
-          color2: 'ffffff',
-          color3: 'ffffff',
-          color4: 'ffffff',
-          color5: 'ffffff',
-        },
+        colors: initialColors,
+        likes: 0,
+      });
+
+      db.ref().child('authors').child(this.user.uid).child(newPaletteRef.key)
+      .set({
+        colors: initialColors,
         likes: 0,
       });
     },
