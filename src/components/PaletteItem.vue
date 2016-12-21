@@ -5,8 +5,8 @@
       <span>
         <span class="likes__num">{{ palette.likes ? palette.likes : '' }}</span>
         <span
-         class="likes__icon"
-         @click="handleLike"
+         :class="['likes__icon', {'likes__icon--liked': isLiked['.value']}]"
+         @click="user.uid ? changeLikes() : undefined"
         >&hearts;</span>
       </span>
     </div>
@@ -91,6 +91,7 @@ export default {
   created() {
     /* eslint-disable no-new */
     new Clipboard('.palette-item__color');
+    this.$bindAsObject('isLiked', db.ref(`likes/${this.user.uid}/${this.palette['.key']}`));
   },
   props: {
     palette: {
@@ -122,8 +123,10 @@ export default {
       this.editMode = false;
       this.$firebaseRefs.palettes.child(this.palette['.key']).child('colors').set(this.currentColors);
     },
-    handleLike() {
-      this.$firebaseRefs.palettes.child(this.palette['.key']).child('likes').set(this.palette.likes + 1);
+    changeLikes() {
+      const diff = this.isLiked['.value'] ? -1 : 1;
+      this.$firebaseRefs.palettes.child(this.palette['.key']).child('likes').set(this.palette.likes + diff);
+      this.$firebaseRefs.isLiked.set(this.isLiked['.value'] ? null : true);
     },
   },
 };
@@ -162,6 +165,9 @@ h5 {
   font-size: 32px;
   line-height: 24px;
   padding: 5px;
+}
+.likes__icon--liked {
+  color: #ff5588;
 }
 .likes__num {
   font-size: 28px;
