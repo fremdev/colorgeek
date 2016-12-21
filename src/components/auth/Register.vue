@@ -3,6 +3,16 @@
     <h3>Register:</h3>
     <form @submit.prevent="createUser">
       <div class="form-group">
+        <label>Nickname
+          <input
+            type="text"
+            class="form-control"
+            placeholder="nickname"
+            v-model="nickname"
+          >
+        </label>
+      </div>
+      <div class="form-group">
         <label>Email address
           <input
             type="email"
@@ -35,13 +45,20 @@ export default {
   name: 'Login',
   data() {
     return {
+      nickname: '',
       email: '',
       password: '',
     };
   },
   methods: {
     createUser() {
-      firebase.auth().createUserWithEmailAndPassword(this.email, this.password).catch((error) => {
+      firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
+      .then((user) => {
+        user.updateProfile({
+          displayName: this.nickname,
+        });
+      })
+      .catch((error) => {
         console.log('Registration error:', error.message);
       });
     },

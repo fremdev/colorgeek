@@ -1,7 +1,7 @@
 <template>
   <div class="palette-item">
     <div class="palette-item__header">
-      <h5>Palette by {{ palette.author }}</h5>
+      <h5>Palette by {{ palette.author.nickname }}</h5>
       <span>
         <span class="likes__num">{{ palette.likes ? palette.likes : '' }}</span>
         <span
@@ -57,7 +57,7 @@
         @click="editMode ? updatePalette() : startEditMode()"
         >{{editMode ? 'Save' : 'Edit'}}</button>
       <button
-        class="btn btn-outline-primary"
+        class="btn btn-outline-primary" disabled
       >Make Public</button>
       <div class="color-controls">
         <div class="color-type">
@@ -96,6 +96,9 @@ export default {
     palette: {
       type: Object,
       required: true,
+    },
+    user: {
+      type: Object,
     },
   },
   components: {

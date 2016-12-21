@@ -19,7 +19,8 @@ export default {
     firebase.auth().onAuthStateChanged((user) => {
       // User is signed in.
       if (user) {
-        this.setCurrentUser({ email: user.email, uid: user.uid });
+        this.setCurrentUser({ nickname: user.displayName, uid: user.uid });
+        this.$router.push('/');
       } else {
         // No user is signed in.
         this.clearCurrentUser();

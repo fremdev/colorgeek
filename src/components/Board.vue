@@ -1,6 +1,9 @@
 <template>
-  <div>
-    <palette-container :palettes="palettes"></palette-container>
+  <div class="wrapper">
+    <palette-container
+      :user="currentUser"
+      :palettes="reversedPalettes"
+    ></palette-container>
   </div>
 </template>
 
@@ -13,8 +16,16 @@ export default {
   components: {
     PaletteContainer,
   },
+  computed: {
+    currentUser() {
+      return this.$store.state.currentUser;
+    },
+    reversedPalettes() {
+      return [].concat(this.palettes).reverse();
+    },
+  },
   firebase: {
-    palettes: db.ref('palettes'),
+    palettes: db.ref('palettes').orderByKey().limitToLast(6),
   },
 };
 </script>

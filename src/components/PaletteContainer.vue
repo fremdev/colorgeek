@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div class="palette-container">
     <palette-item
       v-for="palette in palettes"
-     :palette="palette" :key="palette['.key']"></palette-item>
+     :palette="palette" :user="user" :key="palette['.key']"></palette-item>
   </div>
 </template>
 
@@ -15,6 +15,9 @@ export default {
     palettes: {
       type: Array,
     },
+    user: {
+      type: Object,
+    },
   },
   components: {
     PaletteItem,
@@ -23,4 +26,9 @@ export default {
 </script>
 
 <style scoped>
+  .palette-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
 </style>

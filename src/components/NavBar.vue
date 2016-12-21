@@ -1,6 +1,6 @@
 <template>
   <div class="navigation">
-    <span v-if="!user.email">
+    <span v-if="!user.nickname">
       <router-link
         to="/auth/register"
         class="menu-item"
@@ -15,10 +15,14 @@
     <span v-else>
       <span
         class="menu-status"
-      >Logged as {{ user.email }}</span>
+      >Logged as {{ user.nickname }}</span>
       <span
         class="menu-item"
-        @click.prevent="onLogout"
+        @click="addNewPalette"
+      >Add New</span>
+      <span
+        class="menu-item"
+        @click="onLogout"
       >Log Out</span>
     </span>
   </div>
@@ -26,6 +30,7 @@
 
 <script>
 import firebase from 'firebase';
+import { db } from '../firebase';
 
 export default {
   name: 'NavBar',
@@ -37,6 +42,19 @@ export default {
   methods: {
     onLogout() {
       firebase.auth().signOut();
+    },
+    addNewPalette() {
+      db.ref().child('palettes').push({
+        author: this.user,
+        colors: {
+          color1: 'ffffff',
+          color2: 'ffffff',
+          color3: 'ffffff',
+          color4: 'ffffff',
+          color5: 'ffffff',
+        },
+        likes: 0,
+      });
     },
   },
 };
