@@ -53,22 +53,28 @@
     </div>
     <div class="palette-item__footer">
       <div
-        class="edit-buttons"
-        v-if="!isPublic && !palette.public"
+        :class="['edit-buttons', {'edit-buttons--right': palette.public}]"
+        v-if="!isPublic"
       >
         <button
           class="btn btn-outline-primary"
           @click="editMode ? updatePalette() : startEditMode()"
+          v-if="!palette.public"
           >{{editMode ? 'Save' : 'Edit'}}</button>
         <button
           class="btn btn-outline-primary"
           @click="makePublic()"
-          :disabled="palette.public"
+          v-if="!palette.public"
         >Make Public</button>
         <button
           class="btn btn-danger"
-          disabled
+          @click="deletePalette"
         >Delete</button>
+      </div>
+      <div class="edit-buttons__copy"
+        v-else
+      >
+        <button class="btn btn-outline-primary">Copy to My Palettes</button>
       </div>
     </div>
   </div>
@@ -135,13 +141,21 @@ export default {
       this.editMode = false;
       db.ref(`authors/${this.user.uid}/${this.palette['.key']}/colors`).set(this.currentColors);
     },
+    deletePalette() {
+      db.ref(`authors/${this.user.uid}/${this.palette['.key']}`).remove();
+    },
     changeLikes() {
-      const diff = this.isLiked['.value'] ? -1 : 1;
-      db.ref(`authors/${this.user.uid}/${this.palette['.key']}/likes`).set(this.palette.likes + diff);
+      let newLikesNum;
+      if (this.isLiked['.value']) {
+        newLikesNum = this.palette.likes - 1;
+      } else {
+        newLikesNum = this.palette.likes + 1;
+      }
+      db.ref(`authors/${this.user.uid}/${this.palette['.key']}/likes`).set(newLikesNum);
 
-      if (this.palette.public) {
+      if (this.palette.public || this.isPublic) {
         db.ref().child('public').child(this.palette['.key']).child('likes')
-        .set(this.palette.likes + diff);
+        .set(newLikesNum);
       }
 
       db.ref(`likes/${this.user.uid}/${this.palette['.key']}`).set(this.isLiked['.value'] ? null : true);
@@ -197,6 +211,15 @@ h5 {
 .edit-buttons {
   display: flex;
   justify-content: space-between;
+}
+
+.edit-buttons--right {
+  justify-content: flex-end;
+}
+
+.edit-buttons__copy {
+  display: flex;
+  justify-content: center;
 }
 
 .likes__icon {
