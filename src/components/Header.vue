@@ -5,16 +5,19 @@
       <p>Make your color palette on ColorGeek</p>
     </div>
     <nav-bar :user="currentUser"></nav-bar>
+    <color-controls></color-controls>
   </div>
 
 </template>
 
 <script>
 import NavBar from './NavBar';
+import Controls from './Controls';
 
 export default {
   components: {
     NavBar,
+    ColorControls: Controls,
   },
   computed: {
     currentUser() {

@@ -13,52 +13,42 @@
 
     <div class="palette-item__row">
       <palette-color
-        @click.native="!editMode ? setSelectedColor(1) : undefined"
-        @mouseover.native="setHoveredColor(1)"
+        @click.native="!editMode ? selectColor(1) : undefined"
         @colorWasChanged="currentColors.color1 = $event"
         :editMode="editMode"
         :color="palette.colors.color1"
-        :isHex="colorType === 'hex'"
         :isBig="true"
       ></palette-color>
 
       <palette-color
-        @click.native="!editMode ? setSelectedColor(2) : undefined"
-        @mouseover.native="setHoveredColor(2)"
+        @click.native="!editMode ? selectColor(2) : undefined"
         @colorWasChanged="currentColors.color2 = $event"
         :editMode="editMode"
         :color="palette.colors.color2"
-        :isHex="colorType === 'hex'"
         :isBig="true"
       ></palette-color>
     </div>
 
     <div class="palette-item__row">
       <palette-color
-        @click.native="!editMode ? setSelectedColor(3) : undefined"
-        @mouseover.native="setHoveredColor(3)"
+        @click.native="!editMode ? selectColor(3) : undefined"
         @colorWasChanged="currentColors.color3 = $event"
         :editMode="editMode"
         :color="palette.colors.color3"
-        :isHex="colorType === 'hex'"
       ></palette-color>
 
       <palette-color
-        @click.native="!editMode ? setSelectedColor(4) : undefined"
-        @mouseover.native="setHoveredColor(4)"
+        @click.native="!editMode ? selectColor(4) : undefined"
         @colorWasChanged="currentColors.color4 = $event"
         :editMode="editMode"
         :color="palette.colors.color4"
-        :isHex="colorType === 'hex'"
       ></palette-color>
 
       <palette-color
-        @click.native="!editMode ? setSelectedColor(5) : undefined"
-        @mouseover.native="setHoveredColor(5)"
+        @click.native="!editMode ? selectColor(5) : undefined"
         @colorWasChanged="currentColors.color5 = $event"
         :editMode="editMode"
         :color="palette.colors.color5"
-        :isHex="colorType === 'hex'"
       ></palette-color>
     </div>
     <div class="palette-item__footer">
@@ -80,37 +70,13 @@
           disabled
         >Delete</button>
       </div>
-      <div class="colors-display">
-        <div class="colors-display__colors">
-          <p>Hovered: {{ hoveredColor }}</p>
-          <p>Selected: {{ selectedColor }}</p>
-        </div>
-        <div class="colors-display__controls">
-          <div class="color-type">
-            <input
-              class="form-check-input"
-              type="radio"
-              value="hex"
-              v-model="colorType">
-              hex
-            </label>
-            <label class="form-check-label">
-              <input
-                class="form-check-input"
-                type="radio"
-                value="rgb"
-                v-model="colorType">
-              rgb
-            </label>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </template>
 
 <script>
 import Clipboard from 'clipboard';
+import { mapActions, mapState } from 'vuex';
 import PaletteColor from './Color';
 import { db } from '../firebase';
 import { hexToRgb } from '../helpers';
@@ -139,13 +105,15 @@ export default {
   data() {
     return {
       editMode: false,
-      colorType: 'hex',
       currentColors: { ...this.palette.colors },
       selectedColor: '',
-      hoveredColor: '',
     };
   },
   computed: {
+    ...mapState({
+      colorType: 'colorType',
+      selectedColor: 'selectedColor',
+    }),
     rgbColors() {
       return {
         color1: hexToRgb(this.currentColors.color1),
@@ -157,6 +125,9 @@ export default {
     },
   },
   methods: {
+    ...mapActions({
+      setSelectedColor: 'setSelectedColor',
+    }),
     startEditMode() {
       this.editMode = true;
     },
@@ -184,20 +155,12 @@ export default {
         db.ref(`authors/${this.user.uid}/${this.palette['.key']}/public`).set(true);
       });
     },
-    setHoveredColor(index) {
-      const colorNum = `color${index}`;
-      let hoveredColor = `#${this.currentColors[colorNum]}`;
-      if (this.colorType === 'rgb') {
-        hoveredColor = this.rgbColors[colorNum];
-      }
-      this.hoveredColor = hoveredColor;
-    },
-    setSelectedColor(index) {
+    selectColor(index) {
       const colorNum = `color${index}`;
       if (this.colorType === 'hex') {
-        this.selectedColor = `#${this.currentColors[colorNum]}`;
+        this.setSelectedColor(`#${this.currentColors[colorNum]}`);
       } else {
-        this.selectedColor = this.rgbColors[colorNum];
+        this.setSelectedColor(this.rgbColors[colorNum]);
       }
     },
   },
@@ -236,19 +199,16 @@ h5 {
   justify-content: space-between;
 }
 
-.colors-display {
-  display: flex;
-  justify-content: space-between;
-}
-
 .likes__icon {
   font-size: 32px;
   line-height: 24px;
   padding: 5px;
 }
+
 .likes__icon--liked {
   color: #ff5588;
 }
+
 .likes__num {
   font-size: 28px;
   line-height: 32px;
