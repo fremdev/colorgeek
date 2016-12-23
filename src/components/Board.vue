@@ -1,8 +1,17 @@
 <template>
   <div class="wrapper">
+    <div
+      class="update-message"
+      v-if="palettesWasAdded">
+      {{ palettesWasAdded }} new palettes was added. Do you want to see new palettes?
+      <span
+        @click="loadPalettes(palettesWasAdded)"
+        class="update-message__button"
+      >Update palettes</span>
+    </div>
     <palette-container
       :user="currentUser"
-      :palettes="reversedPalettes"
+      :palettes="palettes"
       :isPublic="true"
     ></palette-container>
   </div>
@@ -14,6 +23,15 @@ import { db } from '../firebase';
 
 export default {
   name: 'Board',
+  created() {
+    this.loadPalettes(3);
+  },
+  data() {
+    return {
+      palettes: [],
+      palettesWasAdded: 0,
+    };
+  },
   components: {
     PaletteContainer,
   },
@@ -21,12 +39,32 @@ export default {
     currentUser() {
       return this.$store.state.currentUser;
     },
-    reversedPalettes() {
-      return [].concat(this.palettes).reverse();
-    },
   },
-  firebase: {
-    palettes: db.ref('public').orderByKey().limitToLast(6),
+  methods: {
+    loadPalettes(palettesToShow) {
+      db.ref('public').off();
+      this.palettesWasAdded = 0;
+      let count = 0;
+      db.ref('public').orderByKey().limitToLast(palettesToShow).on('child_added', (data) => {
+        count += 1;
+        if (count <= palettesToShow) {
+          this.palettes.unshift(data.val());
+        } else {
+          this.palettesWasAdded += 1;
+        }
+      });
+    },
   },
 };
 </script>
+
+<style scoped>
+.update-message {
+  text-align: center;
+}
+.update-message__button {
+  cursor: pointer;
+  color: #555599;
+  text-decoration: underline;
+}
+</style>
