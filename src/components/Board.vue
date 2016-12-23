@@ -9,6 +9,11 @@
         class="update-message__button"
       >Update palettes</span>
     </div>
+    <div>
+      <button
+        @click="loadPalettesOnScroll(endKey, 4)"
+      >Load 50</button>
+    </div>
     <palette-container
       :user="currentUser"
       :palettes="palettes"
@@ -30,6 +35,7 @@ export default {
     return {
       palettes: [],
       palettesWasAdded: 0,
+      endKey: '',
     };
   },
   components: {
@@ -49,8 +55,25 @@ export default {
         count += 1;
         if (count <= palettesToShow) {
           this.palettes.unshift(data.val());
+          if (count === 1) this.endKey = data.key;
         } else {
           this.palettesWasAdded += 1;
+        }
+      });
+    },
+    loadPalettesOnScroll(endKey, palettesNum) {
+      let count = 0;
+      const loadedPalettes = [];
+      db.ref('public').orderByKey().endAt(endKey).limitToLast(palettesNum)
+      .on('child_added', (data) => {
+        count += 1;
+        if (count === 1) {
+          this.endKey = data.key;
+        }
+        if (data.key !== endKey) {
+          loadedPalettes.unshift(data.val());
+        } else {
+          this.palettes = this.palettes.concat(loadedPalettes);
         }
       });
     },
