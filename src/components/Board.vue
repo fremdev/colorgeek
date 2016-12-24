@@ -9,11 +9,6 @@
         class="update-message__button"
       >Update palettes</span>
     </div>
-    <div>
-      <button
-        @click="loadPalettesOnScroll(endKey, 4)"
-      >Load 50</button>
-    </div>
     <palette-container
       :user="currentUser"
       :palettes="palettes"
@@ -26,10 +21,15 @@
 import PaletteContainer from './PaletteContainer';
 import { db } from '../firebase';
 
+/* eslint-disable no-undef */
 export default {
   name: 'Board',
   created() {
-    this.loadPalettes(3);
+    this.loadPalettes(12);
+    window.addEventListener('scroll', this.handleScroll);
+  },
+  destroyed() {
+    window.removeEventListener('scroll', this.handleScroll);
   },
   data() {
     return {
@@ -76,6 +76,11 @@ export default {
           this.palettes = this.palettes.concat(loadedPalettes);
         }
       });
+    },
+    handleScroll() {
+      if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+        this.loadPalettesOnScroll(this.endKey, 7);
+      }
     },
   },
 };
