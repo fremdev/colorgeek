@@ -2,7 +2,7 @@
   <div
     v-if="!editMode"
     :class="['palette-item__color', {'palette-item__color--big': isBig}]"
-    :style="{backgroundColor: '#' + color}"
+    :style="{backgroundColor: '#' + currentColor}"
     :data-clipboard-text="selectedColor"
   ></div>
   <div v-else
@@ -16,6 +16,7 @@
 
 <script>
 export default {
+  name: 'Color',
   props: {
     editMode: {
       type: Boolean,

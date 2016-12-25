@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
+import userPalettes from './modules/userPalettes/userPalettes';
+
 import {
   SET_CURRENT_USER,
   CLEAR_CURRENT_USER,
@@ -16,6 +18,9 @@ export default new Vuex.Store({
     currentUser: {},
     colorType: 'hex',
     selectedColor: '',
+  },
+  modules: {
+    userPalettes,
   },
   mutations: {
     [SET_CURRENT_USER](state, user) {

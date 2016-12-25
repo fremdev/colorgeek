@@ -1,10 +1,11 @@
 <template>
   <div class="palette-container">
     <palette-item
-      v-for="palette in palettes"
+      v-for="(palette, key) in palettes"
       :palette="palette"
       :user="user"
-      :key="palette['.key']"
+      :index="key"      
+      :key="palette.key"
       :isPublic="isPublic"
       ></palette-item>
   </div>

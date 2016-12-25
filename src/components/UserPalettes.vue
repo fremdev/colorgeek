@@ -1,30 +1,61 @@
 <template>
   <div class="wrapper">
     <palette-container
-      :user="currentUser"
-      :palettes="reversedPalettes"
+      :user="user"
+      :palettes="palettes"
     ></palette-container>
   </div>
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex';
 import PaletteContainer from './PaletteContainer';
-import { db } from '../firebase';
 
+/* eslint-disable no-undef */
 export default {
   name: 'UserPalettes',
   components: {
     PaletteContainer,
   },
   created() {
-    this.$bindAsArray('palettes', db.ref(`authors/${this.currentUser.uid}`));
+    this.loadUserPalette({
+      uid: this.user.uid,
+      palettesNum: 3,
+    });
+    window.addEventListener('scroll', this.handleScroll);
+  },
+  destroyed() {
+    this.clearUserPalettes();
+    window.removeEventListener('scroll', this.handleScroll);
+  },
+  data() {
+    return {
+      endKey: '',
+    };
   },
   computed: {
-    currentUser() {
+    user() {
       return this.$store.state.currentUser;
     },
-    reversedPalettes() {
-      return [].concat(this.palettes).reverse();
+    ...mapState({
+      palettes: 'userPalettes',
+    }),
+  },
+  methods: {
+    ...mapActions({
+      loadUserPalette: 'loadUserPalette',
+      addNewUserPalette: 'addNewUserPalette',
+      clearUserPalettes: 'clearUserPalettes',
+      addUserPalettesToEnd: 'addUserPalettesToEnd',
+    }),
+    handleScroll() {
+      if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+        this.addUserPalettesToEnd({
+          uid: this.user.uid,
+          endKey: this.palettes[this.palettes.length - 1].key,
+          palettesNum: 3,
+        });
+      }
     },
   },
 };
