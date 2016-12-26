@@ -1,5 +1,6 @@
 import Board from './components/Board';
 import UserPalettes from './components/UserPalettes';
+import PublicPalettes from './components/PublicPalettes';
 
 import Auth from './components/auth/Auth';
 import Register from './components/auth/Register';
@@ -13,6 +14,10 @@ export default [
   {
     path: '/my-palettes',
     component: UserPalettes,
+  },
+  {
+    path: '/public',
+    component: PublicPalettes,
   },
   {
     path: '/auth',

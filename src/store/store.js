@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
+import publicPalettes from './modules/publicPalettes/publicPalettes';
 import userPalettes from './modules/userPalettes/userPalettes';
 
 import {
@@ -21,6 +22,7 @@ export default new Vuex.Store({
   },
   modules: {
     userPalettes,
+    public: publicPalettes,
   },
   mutations: {
     [SET_CURRENT_USER](state, user) {

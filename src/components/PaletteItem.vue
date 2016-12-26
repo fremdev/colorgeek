@@ -142,6 +142,7 @@ export default {
       setSelectedColor: 'setSelectedColor',
       updateUserPaletteColors: 'updateUserPaletteColors',
       updateUserPaletteLikes: 'updateUserPaletteLikes',
+      updatePublicPaletteLikes: 'updatePublicPaletteLikes',
       makePalettePublic: 'makePalettePublic',
       removeUserPalette: 'removeUserPalette',
     }),
@@ -165,13 +166,23 @@ export default {
       });
     },
     changeLikes() {
-      this.updateUserPaletteLikes({
+      const data = {
         uid: this.user.uid,
         key: this.palette.key,
         index: this.index,
         likes: this.palette.likes,
-        isPublic: this.palette.public,
-      });
+      };
+      if (this.isPublic) {
+        this.updatePublicPaletteLikes({
+          ...data,
+          authorId: this.palette.author.uid,
+        });
+      } else {
+        this.updateUserPaletteLikes({
+          ...data,
+          isPublic: this.palette.public,
+        });
+      }
     },
     makePublic() {
       this.makePalettePublic({

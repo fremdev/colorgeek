@@ -21,6 +21,11 @@
         class="menu-item"
         activeClass="menu-item--active"
       >My Palettes</router-link>
+      <router-link
+        to="/public"
+        class="menu-item"
+        activeClass="menu-item--active"
+      >Public</router-link>
       <span
         class="menu-item"
         @click="addNewUserPalette(user)"

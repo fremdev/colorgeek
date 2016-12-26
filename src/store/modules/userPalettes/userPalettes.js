@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { db } from '../../../firebase';
 import {
-  ADD_USER_PALETTE,
+  ADD_USER_PALETTES,
   CLEAR_USER_PALETTES,
   UPDATE_USER_PALETTE_COLOR,
   UPDATE_USER_PALETTE_COLORS,
@@ -14,7 +14,7 @@ import {
 const state = [];
 
 const mutations = {
-  [ADD_USER_PALETTE] (state, palette) {
+  [ADD_USER_PALETTES] (state, palette) {
     state.unshift(palette);
   },
   [CLEAR_USER_PALETTES] (state) {
@@ -42,11 +42,11 @@ const mutations = {
 };
 
 const actions = {
-  loadUserPalette({ commit }, { uid, palettesNum }) {
+  loadUserPalettes({ commit }, { uid, palettesNum }) {
     db.ref(`authors/${uid}`).orderByKey().limitToLast(palettesNum).on('child_added', (data) => {
       const palette = data.val();
       const key = data.key;
-      commit(ADD_USER_PALETTE,
+      commit(ADD_USER_PALETTES,
         { ...palette,
           key,
         });
@@ -69,7 +69,7 @@ const actions = {
     const key = newPaletteRef.key;
     newPaletteRef.set(initialPalette)
       .then(() => {
-        commit(ADD_USER_PALETTE, { ...initialPalette, key });
+        commit(ADD_USER_PALETTES, { ...initialPalette, key });
       });
   },
   updateUserPaletteColor({ commit }, color) {

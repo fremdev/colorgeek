@@ -3,6 +3,7 @@
     <palette-container
       :user="user"
       :palettes="palettes"
+      :isPublic="true"
     ></palette-container>
   </div>
 </template>
@@ -13,19 +14,16 @@ import PaletteContainer from './PaletteContainer';
 
 /* eslint-disable no-undef */
 export default {
-  name: 'UserPalettes',
+  name: 'PublicPalettes',
   components: {
     PaletteContainer,
   },
   created() {
-    this.loadUserPalettes({
-      uid: this.user.uid,
-      palettesNum: 3,
-    });
+    this.loadPublicPalettes(3);
     window.addEventListener('scroll', this.handleScroll);
   },
   destroyed() {
-    this.clearUserPalettes();
+    this.clearPublicPalettes();
     window.removeEventListener('scroll', this.handleScroll);
   },
   computed: {
@@ -33,18 +31,18 @@ export default {
       return this.$store.state.currentUser;
     },
     ...mapState({
-      palettes: 'userPalettes',
+      palettes: state => state.public.palettes,
     }),
   },
   methods: {
     ...mapActions({
-      loadUserPalettes: 'loadUserPalettes',
-      clearUserPalettes: 'clearUserPalettes',
-      addUserPalettesToEnd: 'addUserPalettesToEnd',
+      loadPublicPalettes: 'loadPublicPalettes',
+      clearPublicPalettes: 'clearPublicPalettes',
+      addPublicPalettesToEnd: 'addPublicPalettesToEnd',
     }),
     handleScroll() {
       if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-        this.addUserPalettesToEnd({
+        this.addPublicPalettesToEnd({
           uid: this.user.uid,
           endKey: this.palettes[this.palettes.length - 1].key,
           palettesNum: 3,
