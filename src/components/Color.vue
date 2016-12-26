@@ -2,19 +2,21 @@
   <div
     v-if="!editMode"
     :class="['palette-item__color', {'palette-item__color--big': isBig}]"
-    :style="{backgroundColor: '#' + currentColor}"
+    :style="{backgroundColor: '#' + color.value}"
     :data-clipboard-text="selectedColor"
   ></div>
   <div v-else
     :class="['color-picker', {'color-picker--big': isBig}]"
-    :style="{backgroundColor: currentColor}">
+    :style="{backgroundColor: '#' + color.value}">
     <label class="color-picker__label">
-      <input class="color-picker__input" type="color" :value="currentColor" @input="setCurrentColor($event.target.value)">
+      <input class="color-picker__input" type="color" :value="color.value" @input="updateColor($event.target.value)">
     </label>
   </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   name: 'Color',
   props: {
@@ -23,7 +25,7 @@ export default {
       required: true,
     },
     color: {
-      type: String,
+      type: Object,
       required: true,
     },
     isBig: {
@@ -31,20 +33,18 @@ export default {
       default: false,
     },
   },
-  data() {
-    return {
-      currentColor: this.color,
-    };
-  },
   computed: {
     selectedColor() {
       return this.$store.state.selectedColor;
     },
   },
   methods: {
-    setCurrentColor(color) {
-      this.currentColor = color;
-      this.$emit('colorWasChanged', color.slice(1));
+    ...mapActions({
+      updateUserPaletteColor: 'updateUserPaletteColor',
+    }),
+    updateColor(value) {
+      const color = { ...this.color, value: value.slice(1) };
+      this.updateUserPaletteColor(color);
     },
   },
 };

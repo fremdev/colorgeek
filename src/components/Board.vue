@@ -54,7 +54,7 @@ export default {
       db.ref('public').orderByKey().limitToLast(palettesToShow).on('child_added', (data) => {
         count += 1;
         if (count <= palettesToShow) {
-          this.palettes.unshift(data.val());
+          this.palettes.unshift({ ...data.val(), key: data.key });
           if (count === 1) this.endKey = data.key;
         } else {
           this.palettesWasAdded += 1;

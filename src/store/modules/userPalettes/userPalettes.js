@@ -3,6 +3,7 @@ import { db } from '../../../firebase';
 import {
   ADD_USER_PALETTE,
   CLEAR_USER_PALETTES,
+  UPDATE_USER_PALETTE_COLOR,
   UPDATE_USER_PALETTE_COLORS,
   UPDATE_USER_PALETTE_LIKES,
   MAKE_PALETTE_PUBLIC,
@@ -18,6 +19,9 @@ const mutations = {
   },
   [CLEAR_USER_PALETTES] (state) {
     state.length = 0;
+  },
+  [UPDATE_USER_PALETTE_COLOR] (state, color) {
+    state[color.paletteIndex].colors[`color${color.colorIndex}`] = color.value;
   },
   [UPDATE_USER_PALETTE_COLORS] (state, palette) {
     state[palette.index].colors = palette.colors;
@@ -68,13 +72,16 @@ const actions = {
         commit(ADD_USER_PALETTE, { ...initialPalette, key });
       });
   },
+  updateUserPaletteColor({ commit }, color) {
+    commit(UPDATE_USER_PALETTE_COLOR, color);
+  },
   updateUserPaletteColors({ commit }, { uid, key, index, colors }) {
     db.ref(`authors/${uid}/${key}/colors`).set(colors)
       .then(() => {
         commit(UPDATE_USER_PALETTE_COLORS, { index, colors })
       });
   },
-  updateUserPaletteLikes({ commit }, { uid, key, index, likes }) {
+  updateUserPaletteLikes({ commit }, { uid, key, index, likes, isPublic }) {
     const isLikedRef = db.ref(`likes/${uid}/${key}`);
     isLikedRef.once('value')
       .then((data) => {
@@ -90,6 +97,11 @@ const actions = {
                 isLiked: newIsLiked,
               });
             });
+          })
+          .then(() => {
+            if(isPublic) {
+              db.ref(`public/${key}/likes`).set(newLikesNum);
+            }
           });
       });
   },

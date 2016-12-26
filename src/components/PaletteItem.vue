@@ -14,17 +14,23 @@
     <div class="palette-item__row">
       <palette-color
         @click.native="!editMode ? selectColor(1) : undefined"
-        @colorWasChanged="currentColors.color1 = $event"
         :editMode="editMode"
-        :color="palette.colors.color1"
+        :color="{
+          value: palette.colors.color1,
+          colorIndex: 1,
+          paletteIndex: index,
+          }"
         :isBig="true"
       ></palette-color>
 
       <palette-color
         @click.native="!editMode ? selectColor(2) : undefined"
-        @colorWasChanged="currentColors.color2 = $event"
         :editMode="editMode"
-        :color="palette.colors.color2"
+        :color="{
+          value: palette.colors.color2,
+          colorIndex: 2,
+          paletteIndex: index,
+          }"
         :isBig="true"
       ></palette-color>
     </div>
@@ -32,23 +38,32 @@
     <div class="palette-item__row">
       <palette-color
         @click.native="!editMode ? selectColor(3) : undefined"
-        @colorWasChanged="currentColors.color3 = $event"
         :editMode="editMode"
-        :color="palette.colors.color3"
+        :color="{
+          value: palette.colors.color3,
+          colorIndex: 3,
+          paletteIndex: index,
+          }"
       ></palette-color>
 
       <palette-color
         @click.native="!editMode ? selectColor(4) : undefined"
-        @colorWasChanged="currentColors.color4 = $event"
         :editMode="editMode"
-        :color="palette.colors.color4"
+        :color="{
+          value: palette.colors.color4,
+          colorIndex: 4,
+          paletteIndex: index,
+          }"
       ></palette-color>
 
       <palette-color
         @click.native="!editMode ? selectColor(5) : undefined"
-        @colorWasChanged="currentColors.color5 = $event"
         :editMode="editMode"
-        :color="palette.colors.color5"
+        :color="{
+          value: palette.colors.color5,
+          colorIndex: 5,
+          paletteIndex: index,
+          }"
       ></palette-color>
     </div>
     <div class="palette-item__footer">
@@ -88,10 +103,11 @@ import { db } from '../firebase';
 import { hexToRgb } from '../helpers';
 
 export default {
+  name: 'palette-item',
   created() {
     /* eslint-disable no-new */
     new Clipboard('.palette-item__color');
-    this.$bindAsObject('isLiked', db.ref(`likes/${this.user.uid}/${this.palette['.key']}`));
+    this.$bindAsObject('isLiked', db.ref(`likes/${this.user.uid}/${this.palette.key}`));
   },
   props: {
     palette: {
@@ -104,6 +120,9 @@ export default {
     isPublic: {
       type: Boolean,
     },
+    index: {
+      type: Number,
+    },
   },
   components: {
     PaletteColor,
@@ -111,70 +130,61 @@ export default {
   data() {
     return {
       editMode: false,
-      currentColors: { ...this.palette.colors },
-      selectedColor: '',
     };
   },
   computed: {
     ...mapState({
       colorType: 'colorType',
-      selectedColor: 'selectedColor',
     }),
-    rgbColors() {
-      return {
-        color1: hexToRgb(this.currentColors.color1),
-        color2: hexToRgb(this.currentColors.color2),
-        color3: hexToRgb(this.currentColors.color3),
-        color4: hexToRgb(this.currentColors.color4),
-        color5: hexToRgb(this.currentColors.color5),
-      };
-    },
   },
   methods: {
     ...mapActions({
       setSelectedColor: 'setSelectedColor',
+      updateUserPaletteColors: 'updateUserPaletteColors',
+      updateUserPaletteLikes: 'updateUserPaletteLikes',
+      makePalettePublic: 'makePalettePublic',
+      removeUserPalette: 'removeUserPalette',
     }),
     startEditMode() {
       this.editMode = true;
     },
     updatePalette() {
       this.editMode = false;
-      db.ref(`authors/${this.user.uid}/${this.palette['.key']}/colors`).set(this.currentColors);
+      this.updateUserPaletteColors({
+        uid: this.user.uid,
+        key: this.palette.key,
+        index: this.index,
+        colors: this.palette.colors,
+      });
     },
     deletePalette() {
-      db.ref(`authors/${this.user.uid}/${this.palette['.key']}`).remove();
+      this.removeUserPalette({
+        uid: this.user.uid,
+        key: this.palette.key,
+        index: this.index,
+      });
     },
     changeLikes() {
-      let newLikesNum;
-      if (this.isLiked['.value']) {
-        newLikesNum = this.palette.likes - 1;
-      } else {
-        newLikesNum = this.palette.likes + 1;
-      }
-      db.ref(`authors/${this.user.uid}/${this.palette['.key']}/likes`).set(newLikesNum);
-
-      if (this.palette.public || this.isPublic) {
-        db.ref().child('public').child(this.palette['.key']).child('likes')
-        .set(newLikesNum);
-      }
-
-      db.ref(`likes/${this.user.uid}/${this.palette['.key']}`).set(this.isLiked['.value'] ? null : true);
+      this.updateUserPaletteLikes({
+        uid: this.user.uid,
+        key: this.palette.key,
+        index: this.index,
+        likes: this.palette.likes,
+        isPublic: this.palette.public,
+      });
     },
     makePublic() {
-      db.ref(`public/${this.palette['.key']}`).set({
-        author: this.user,
-        colors: this.palette.colors,
-        likes: this.palette.likes,
-      }).then(() => {
-        db.ref(`authors/${this.user.uid}/${this.palette['.key']}/public`).set(true);
+      this.makePalettePublic({
+        palette: this.palette,
+        index: this.index,
       });
     },
     selectColor(index) {
       const colorNum = `color${index}`;
       if (this.colorType === 'hex') {
-        this.setSelectedColor(`#${this.currentColors[colorNum]}`);
+        this.setSelectedColor(`#${this.palette.colors[colorNum]}`);
       } else {
-        this.setSelectedColor(this.rgbColors[colorNum]);
+        this.setSelectedColor(hexToRgb(this.palette.colors[colorNum]));
       }
     },
   },
