@@ -89,7 +89,9 @@
       <div class="edit-buttons__copy"
         v-else
       >
-        <button class="btn btn-outline-primary">Copy to My Palettes</button>
+        <button class="btn btn-outline-primary"
+          @click="copyToMyPalettes"
+        >Copy to My Palettes</button>
       </div>
     </div>
   </div>
@@ -188,6 +190,13 @@ export default {
       this.makePalettePublic({
         palette: this.palette,
         index: this.index,
+      });
+    },
+    copyToMyPalettes() {
+      db.ref(`authors/${this.user.uid}/${this.palette.key}`).set({
+        ...this.palette,
+        public: true,
+        key: null,
       });
     },
     selectColor(index) {

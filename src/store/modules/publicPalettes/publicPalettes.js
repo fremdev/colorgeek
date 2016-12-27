@@ -5,7 +5,6 @@ import {
   UPDATE_PUBLIC_PALETTE_LIKES,
   CLEAR_PUBLIC_PALETTES,
   ADD_PUBLIC_PALETTES_TO_END,
-  COPY_TO_USER_PALETTES,
 } from './mutation-types';
 
 const state = {

@@ -4,7 +4,7 @@
       v-for="(palette, key) in palettes"
       :palette="palette"
       :user="user"
-      :index="key"      
+      :index="key"
       :key="palette.key"
       :isPublic="isPublic"
       ></palette-item>

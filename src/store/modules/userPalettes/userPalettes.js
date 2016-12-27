@@ -47,7 +47,8 @@ const actions = {
       const palette = data.val();
       const key = data.key;
       commit(ADD_USER_PALETTES,
-        { ...palette,
+        { public: false,
+          ...palette,
           key,
         });
     });
@@ -69,7 +70,7 @@ const actions = {
     const key = newPaletteRef.key;
     newPaletteRef.set(initialPalette)
       .then(() => {
-        commit(ADD_USER_PALETTES, { ...initialPalette, key });
+        commit(ADD_USER_PALETTES, { ...initialPalette, key, public: false });
       });
   },
   updateUserPaletteColor({ commit }, color) {
