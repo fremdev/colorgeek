@@ -28,7 +28,7 @@
       >Public</router-link>
       <span
         class="menu-item"
-        @click="addNewPalette"
+        @click="addNewUserPalette(user)"
       >Add New</span>
       <span
         class="menu-item"
@@ -55,10 +55,6 @@ export default {
     }),
     onLogout() {
       firebase.auth().signOut();
-    },
-    addNewPalette() {
-      this.addNewUserPalette(this.user);
-      this.$router.push('my-palettes');
     },
   },
 };

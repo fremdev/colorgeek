@@ -1,5 +1,14 @@
 <template>
   <div class="wrapper">
+    <div
+      class="update-message"
+      v-if="palettesWasAdded">
+      {{ palettesWasAdded }} new palettes was added. Do you want to see new palettes?
+      <span
+        @click="loadPublicPalettes(palettesWasAdded)"
+        class="update-message__button"
+      >Update palettes</span>
+    </div>
     <palette-container
       :user="user"
       :palettes="palettes"
@@ -32,6 +41,7 @@ export default {
     },
     ...mapState({
       palettes: state => state.public.palettes,
+      palettesWasAdded: state => state.public.palettesWasAdded,
     }),
   },
   methods: {
@@ -52,3 +62,14 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.update-message {
+  text-align: center;
+}
+.update-message__button {
+  cursor: pointer;
+  color: #555599;
+  text-decoration: underline;
+}
+</style>

@@ -5,6 +5,7 @@ import {
   UPDATE_PUBLIC_PALETTE_LIKES,
   CLEAR_PUBLIC_PALETTES,
   ADD_PUBLIC_PALETTES_TO_END,
+  SET_PALETTES_WAS_ADDED,
 } from './mutation-types';
 
 const state = {
@@ -26,17 +27,28 @@ const mutations = {
   [ADD_PUBLIC_PALETTES_TO_END] (state, palettes) {
     state.palettes.push(...palettes);
   },
+  [SET_PALETTES_WAS_ADDED] (state, value) {
+    state.palettesWasAdded = value;
+  },
 };
 
 const actions = {
-  loadPublicPalettes({ commit }, palettesNum) {
+  loadPublicPalettes({ commit, state }, palettesNum) {
+    db.ref('public').off();
+    commit(SET_PALETTES_WAS_ADDED, 0);
+    let count = 0;
     db.ref('public').orderByKey().limitToLast(palettesNum).on('child_added', (data) => {
-      const palette = data.val();
-      const key = data.key;
-      commit(ADD_PUBLIC_PALETTE,
-        { ...palette,
+      count += 1;
+      if (count <= palettesNum) {
+        const palette = data.val();
+        const key = data.key;
+        commit(ADD_PUBLIC_PALETTE, {
+          ...palette,
           key,
         });
+      } else {
+        commit(SET_PALETTES_WAS_ADDED, state.palettesWasAdded + 1);
+      }
     });
   },
   updatePublicPaletteLikes({ commit }, { uid, key, index, likes, authorId }) {
