@@ -1,6 +1,7 @@
 import Board from './components/Board';
 import UserPalettes from './components/UserPalettes';
 import PublicPalettes from './components/PublicPalettes';
+import PickedPalettes from './components/PickedPalettes';
 import PopularPalettes from './components/PopularPalettes';
 
 import Auth from './components/auth/Auth';
@@ -19,6 +20,10 @@ export default [
   {
     path: '/public',
     component: PublicPalettes,
+  },
+  {
+    path: '/picked',
+    component: PickedPalettes,
   },
   {
     path: '/popular',

@@ -73,6 +73,14 @@ const actions = {
     const publicRef = db.ref('public').orderByKey().limitToLast(palettesNum);
     loadPalettes({ commit, state }, palettesNum, publicRef);
   },
+  loadPickedPalettes({ commit, state }, palettesNum) {
+    const pickedRef = db.ref('public').orderByChild('picked').equalTo(true).limitToLast(palettesNum);
+    loadPalettes({ commit, state }, palettesNum, pickedRef);
+    pickedRef.on('child_changed', (data) => {
+      console.log(data.val());
+      commit(SET_PALETTES_WAS_ADDED, state.palettesWasAdded + 1);
+    })
+  },
   loadPopularPalettes({ commit, state }, palettesNum) {
     const popularRef = db.ref('public').orderByChild('likes').limitToLast(palettesNum);
     db.ref('public').off();
@@ -124,6 +132,22 @@ const actions = {
   addPublicPalettesToEnd({ commit }, { uid, endKey, palettesNum }) {
     const publicRef = db.ref('public').orderByKey().endAt(endKey).limitToLast(palettesNum);
     addPalettesToEnd({ commit }, { uid, endKey, palettesNum }, publicRef);
+  },
+  addPickedPalettesToEnd({ commit }, { uid, endKey, palettesNum }) {
+    const pickedRef = db.ref('public').orderByChild('picked').endAt(true, endKey).limitToLast(palettesNum);
+    const nextPalettes = [];
+    pickedRef.on('child_added', (data) => {
+      const palette = data.val();
+      const key = data.key;
+      if (key !== endKey && palette.picked) {
+        nextPalettes.unshift({
+          ...palette,
+          key,
+        });
+      } else {
+        commit(ADD_PUBLIC_PALETTES_TO_END, nextPalettes);
+      }
+    });
   },
   addPopularPalettesToEnd({ commit }, { uid, likes, endKey, palettesNum }) {
     const popularRef = db.ref('public').orderByChild('likes').endAt(likes, endKey).limitToLast(palettesNum);

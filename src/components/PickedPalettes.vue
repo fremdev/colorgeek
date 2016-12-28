@@ -1,5 +1,14 @@
 <template>
   <div class="wrapper">
+    <div
+      class="update-message"
+      v-if="palettesWasAdded">
+      {{ palettesWasAdded }} new palettes was added. Do you want to see new palettes?
+      <span
+        @click="loadPickedPalettes(palettesWasAdded)"
+        class="update-message__button"
+      >Update palettes</span>
+    </div>
     <palette-container
       :user="user"
       :palettes="palettes"
@@ -14,12 +23,12 @@ import PaletteContainer from './PaletteContainer';
 
 /* eslint-disable no-undef */
 export default {
-  name: 'PopularPalettes',
+  name: 'PublicPalettes',
   components: {
     PaletteContainer,
   },
   created() {
-    this.loadPopularPalettes(3);
+    this.loadPickedPalettes(3);
     window.addEventListener('scroll', this.handleScroll);
   },
   destroyed() {
@@ -32,19 +41,19 @@ export default {
     },
     ...mapState({
       palettes: state => state.public.palettes,
+      palettesWasAdded: state => state.public.palettesWasAdded,
     }),
   },
   methods: {
     ...mapActions({
-      loadPopularPalettes: 'loadPopularPalettes',
+      loadPickedPalettes: 'loadPickedPalettes',
       clearPublicPalettes: 'clearPublicPalettes',
-      addPopularPalettesToEnd: 'addPopularPalettesToEnd',
+      addPickedPalettesToEnd: 'addPickedPalettesToEnd',
     }),
     handleScroll() {
       if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-        this.addPopularPalettesToEnd({
+        this.addPickedPalettesToEnd({
           uid: this.user.uid,
-          likes: this.palettes[this.palettes.length - 1].likes,
           endKey: this.palettes[this.palettes.length - 1].key,
           palettesNum: 3,
         });
@@ -53,3 +62,14 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.update-message {
+  text-align: center;
+}
+.update-message__button {
+  cursor: pointer;
+  color: #555599;
+  text-decoration: underline;
+}
+</style>

@@ -27,6 +27,11 @@
         activeClass="menu-item--active"
       >Public</router-link>
       <router-link
+        to="/picked"
+        class="menu-item"
+        activeClass="menu-item--active"
+      >Picked</router-link>
+      <router-link
         to="/popular"
         class="menu-item"
         activeClass="menu-item--active"
