@@ -19,6 +19,7 @@ const mutations = {
   },
   [CLEAR_PUBLIC_PALETTES] (state) {
     state.palettes.length = 0;
+    state.palettesWasAdded = 0;
   },
   [UPDATE_PUBLIC_PALETTE_LIKES] (state, palette) {
     state.palettes[palette.index].likes = palette.likes;
@@ -32,12 +33,52 @@ const mutations = {
   },
 };
 
+const loadPalettes = ({ commit, state }, palettesNum, dbRef) => {
+  db.ref('public').off();
+  commit(SET_PALETTES_WAS_ADDED, 0);
+  let count = 0;
+  dbRef.on('child_added', (data) => {
+    count += 1;
+    if (count <= palettesNum) {
+      const palette = data.val();
+      const key = data.key;
+      commit(ADD_PUBLIC_PALETTE, {
+        ...palette,
+        key,
+      });
+    } else {
+      commit(SET_PALETTES_WAS_ADDED, state.palettesWasAdded + 1);
+    }
+  });
+};
+
+const addPalettesToEnd = ({ commit }, { uid, likes, endKey, palettesNum }, dbRef) => {
+  const nextPalettes = [];
+  dbRef.on('child_added', (data) => {
+    const palette = data.val();
+    const key = data.key;
+    if (key !== endKey) {
+      nextPalettes.unshift({
+        ...palette,
+        key,
+      });
+    } else {
+      commit(ADD_PUBLIC_PALETTES_TO_END, nextPalettes);
+    }
+  });
+}
+
 const actions = {
   loadPublicPalettes({ commit, state }, palettesNum) {
+    const publicRef = db.ref('public').orderByKey().limitToLast(palettesNum);
+    loadPalettes({ commit, state }, palettesNum, publicRef);
+  },
+  loadPopularPalettes({ commit, state }, palettesNum) {
+    const popularRef = db.ref('public').orderByChild('likes').limitToLast(palettesNum);
     db.ref('public').off();
     commit(SET_PALETTES_WAS_ADDED, 0);
     let count = 0;
-    db.ref('public').orderByKey().limitToLast(palettesNum).on('child_added', (data) => {
+    popularRef.on('child_added', (data) => {
       count += 1;
       if (count <= palettesNum) {
         const palette = data.val();
@@ -46,8 +87,6 @@ const actions = {
           ...palette,
           key,
         });
-      } else {
-        commit(SET_PALETTES_WAS_ADDED, state.palettesWasAdded + 1);
       }
     });
   },
@@ -83,20 +122,12 @@ const actions = {
     commit(CLEAR_PUBLIC_PALETTES);
   },
   addPublicPalettesToEnd({ commit }, { uid, endKey, palettesNum }) {
-    const nextPalettes = [];
-    db.ref('public').orderByKey().endAt(endKey).limitToLast(palettesNum)
-    .on('child_added', (data) => {
-      const palette = data.val();
-      const key = data.key;
-      if (key !== endKey) {
-        nextPalettes.unshift({
-          ...palette,
-          key,
-        });
-      } else {
-        commit(ADD_PUBLIC_PALETTES_TO_END, nextPalettes);
-      }
-    });
+    const publicRef = db.ref('public').orderByKey().endAt(endKey).limitToLast(palettesNum);
+    addPalettesToEnd({ commit }, { uid, endKey, palettesNum }, publicRef);
+  },
+  addPopularPalettesToEnd({ commit }, { uid, likes, endKey, palettesNum }) {
+    const popularRef = db.ref('public').orderByChild('likes').endAt(likes, endKey).limitToLast(palettesNum);
+    addPalettesToEnd({ commit }, { uid, endKey, palettesNum }, popularRef);
   },
 };
 

@@ -26,6 +26,11 @@
         class="menu-item"
         activeClass="menu-item--active"
       >Public</router-link>
+      <router-link
+        to="/popular"
+        class="menu-item"
+        activeClass="menu-item--active"
+      >Popular</router-link>
       <span
         class="menu-item"
         @click="addNewUserPalette(user)"
