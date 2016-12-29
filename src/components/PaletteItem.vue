@@ -206,6 +206,7 @@ export default {
         ...this.palette,
         public: true,
         key: null,
+        picked: null,
       });
     },
     selectColor(index) {

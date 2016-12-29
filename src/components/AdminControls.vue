@@ -2,10 +2,12 @@
   <div class="admin-controls">
     <button
       class="btn btn-success"
-      @click="makePalettePicked">Make Picked</button>
+      @click="makePalettePicked"
+      :disabled="isDeleted || isPicked">{{ isPicked ? 'Picked' : 'Make Picked'}}</button>
     <button
       class="btn btn-danger"
-      @click="deleteFromPublicPalettes">Delete</button>
+      @click="deleteFromPublicPalettes"
+      :disabled="isDeleted">{{ isDeleted ? 'Removed' : 'Delete' }}</button>
   </div>
 </template>
 
@@ -18,6 +20,12 @@ export default {
       type: String,
     },
   },
+  data() {
+    return {
+      isDeleted: false,
+      isPicked: false,
+    };
+  },
   computed: {
     user() {
       return this.$store.state.currentUser;
@@ -28,7 +36,7 @@ export default {
       if (this.user.uid === process.env.ADMIN_UID) {
         db.ref(`public/${this.paletteKey}/picked`).set(true)
           .then(() => {
-            console.log('picked');
+            this.isPicked = true;
           });
       }
     },
@@ -36,7 +44,7 @@ export default {
       if (this.user.uid === process.env.ADMIN_UID) {
         db.ref(`public/${this.paletteKey}`).remove()
           .then(() => {
-            console.log('removed');
+            this.isDeleted = true;
           });
       }
     },
