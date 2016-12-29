@@ -15,6 +15,7 @@ export default [
   {
     path: '/my-palettes',
     component: UserPalettes,
+    meta: { requiresAuth: true },
   },
   {
     path: '/public',
