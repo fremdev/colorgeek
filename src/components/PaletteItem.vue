@@ -94,6 +94,10 @@
         >Copy to My Palettes</button>
       </div>
     </div>
+    <AdminControls
+      :paletteKey="palette.key"
+      v-show="showAdminControls"
+      ></AdminControls>
   </div>
 </template>
 
@@ -101,6 +105,7 @@
 import Clipboard from 'clipboard';
 import { mapActions, mapState } from 'vuex';
 import PaletteColor from './Color';
+import AdminControls from './AdminControls';
 import { db } from '../firebase';
 import { hexToRgb } from '../helpers';
 
@@ -128,6 +133,7 @@ export default {
   },
   components: {
     PaletteColor,
+    AdminControls,
   },
   data() {
     return {
@@ -138,6 +144,9 @@ export default {
     ...mapState({
       colorType: 'colorType',
     }),
+    showAdminControls() {
+      return this.isPublic && process.env.ADMIN_UID === this.user.uid;
+    },
   },
   methods: {
     ...mapActions({

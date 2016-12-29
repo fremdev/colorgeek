@@ -33,25 +33,6 @@ const mutations = {
   },
 };
 
-const loadPalettes = ({ commit, state }, palettesNum, dbRef) => {
-  db.ref('public').off();
-  commit(SET_PALETTES_WAS_ADDED, 0);
-  let count = 0;
-  dbRef.on('child_added', (data) => {
-    count += 1;
-    if (count <= palettesNum) {
-      const palette = data.val();
-      const key = data.key;
-      commit(ADD_PUBLIC_PALETTE, {
-        ...palette,
-        key,
-      });
-    } else {
-      commit(SET_PALETTES_WAS_ADDED, state.palettesWasAdded + 1);
-    }
-  });
-};
-
 const addPalettesToEnd = ({ commit }, { uid, likes, endKey, palettesNum }, dbRef) => {
   const nextPalettes = [];
   dbRef.on('child_added', (data) => {
@@ -71,20 +52,50 @@ const addPalettesToEnd = ({ commit }, { uid, likes, endKey, palettesNum }, dbRef
 const actions = {
   loadPublicPalettes({ commit, state }, palettesNum) {
     const publicRef = db.ref('public').orderByKey().limitToLast(palettesNum);
-    loadPalettes({ commit, state }, palettesNum, publicRef);
+    db.ref('public').off();
+    commit(SET_PALETTES_WAS_ADDED, 0);
+    let count = 0;
+    let startKey;
+    publicRef.on('child_added', (data) => {
+      count += 1;
+      if(count === palettesNum) { startKey = data.key; }
+      if (count <= palettesNum) {
+        const palette = data.val();
+        const key = data.key;
+        commit(ADD_PUBLIC_PALETTE, {
+          ...palette,
+          key,
+        });
+      } else {
+        db.ref('public').off();
+        let addedCount = 0;
+        db.ref('public').orderByKey().startAt(startKey).on('child_added', (data) => {
+          addedCount += 1;
+          // Omit addedCount === 1 because startAt() include child with start key
+          if(addedCount > 1) {
+            commit(SET_PALETTES_WAS_ADDED, state.palettesWasAdded + 1);
+          }
+        });
+      }
+    });
   },
   loadPickedPalettes({ commit, state }, palettesNum) {
     const pickedRef = db.ref('public').orderByChild('picked').equalTo(true).limitToLast(palettesNum);
-    loadPalettes({ commit, state }, palettesNum, pickedRef);
-    pickedRef.on('child_changed', (data) => {
-      console.log(data.val());
-      commit(SET_PALETTES_WAS_ADDED, state.palettesWasAdded + 1);
-    })
+    let count = 0;
+    pickedRef.on('child_added', (data) => {
+      count += 1;
+      if (count <= palettesNum) {
+        const palette = data.val();
+        const key = data.key;
+        commit(ADD_PUBLIC_PALETTE, {
+          ...palette,
+          key,
+        });
+      }
+    });
   },
   loadPopularPalettes({ commit, state }, palettesNum) {
     const popularRef = db.ref('public').orderByChild('likes').limitToLast(palettesNum);
-    db.ref('public').off();
-    commit(SET_PALETTES_WAS_ADDED, 0);
     let count = 0;
     popularRef.on('child_added', (data) => {
       count += 1;
