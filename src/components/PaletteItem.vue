@@ -126,6 +126,7 @@ export default {
     },
     isPublic: {
       type: Boolean,
+      default: false,
     },
     index: {
       type: Number,

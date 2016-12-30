@@ -53,9 +53,27 @@ const actions = {
         });
     });
   },
+  // addNewUserPalette({ commit }, user) {
+  //   db.ref(`authors/${user.uid}`).off();
+  //   const newPaletteRef = db.ref(`authors/${user.uid}`).push();
+  //   const initialPalette = {
+  //     colors: {
+  //       color1: 'ffffff',
+  //       color2: 'ffffff',
+  //       color3: 'ffffff',
+  //       color4: 'ffffff',
+  //       color5: 'ffffff',
+  //     },
+  //     likes: 0,
+  //     author: user,
+  //   };
+  //   const key = newPaletteRef.key;
+  //   newPaletteRef.set(initialPalette)
+  //     .then(() => {
+  //       commit(ADD_USER_PALETTES, { ...initialPalette, key, public: false });
+  //     });
+  // },
   addNewUserPalette({ commit }, user) {
-    db.ref(`authors/${user.uid}`).off();
-    const newPaletteRef = db.ref(`authors/${user.uid}`).push();
     const initialPalette = {
       colors: {
         color1: 'ffffff',
@@ -67,11 +85,7 @@ const actions = {
       likes: 0,
       author: user,
     };
-    const key = newPaletteRef.key;
-    newPaletteRef.set(initialPalette)
-      .then(() => {
-        commit(ADD_USER_PALETTES, { ...initialPalette, key, public: false });
-      });
+    commit(ADD_USER_PALETTES, { ...initialPalette, public: false });
   },
   updateUserPaletteColor({ commit }, color) {
     commit(UPDATE_USER_PALETTE_COLOR, color);

@@ -38,8 +38,13 @@
       >Popular</router-link>
       <span
         class="menu-item"
-        @click="addNewUserPalette(user)"
+        @click="addPalette"
       >Add New</span>
+      <router-link
+        to="/create"
+        class="menu-item"
+        activeClass="menu-item--active"
+      >Create</router-link>
       <span
         class="menu-item"
         @click="onLogout"
@@ -65,6 +70,9 @@ export default {
     }),
     onLogout() {
       firebase.auth().signOut();
+    },
+    addPalette() {
+      this.addNewUserPalette(this.user);
     },
   },
 };
