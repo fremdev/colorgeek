@@ -41,10 +41,15 @@ export default {
   methods: {
     ...mapActions({
       updateUserPaletteColor: 'updateUserPaletteColor',
+      updateNewPaletteColor: 'updateNewPaletteColor',
     }),
     updateColor(value) {
       const color = { ...this.color, value: value.slice(1) };
-      this.updateUserPaletteColor(color);
+      if (this.$route.path.includes('/create')) {
+        this.updateNewPaletteColor(color);
+      } else {
+        this.updateUserPaletteColor(color);
+      }
     },
   },
 };

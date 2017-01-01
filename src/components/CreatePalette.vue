@@ -11,7 +11,6 @@
           :color="{
             value: palette.colors.color1,
             colorIndex: 1,
-            paletteIndex: index,
             }"
           :isBig="true"
         ></palette-color>
@@ -21,7 +20,6 @@
           :color="{
             value: palette.colors.color2,
             colorIndex: 2,
-            paletteIndex: index,
             }"
           :isBig="true"
         ></palette-color>
@@ -33,7 +31,6 @@
           :color="{
             value: palette.colors.color3,
             colorIndex: 3,
-            paletteIndex: index,
             }"
         ></palette-color>
 
@@ -42,7 +39,6 @@
           :color="{
             value: palette.colors.color4,
             colorIndex: 4,
-            paletteIndex: index,
             }"
         ></palette-color>
 
@@ -51,7 +47,6 @@
           :color="{
             value: palette.colors.color5,
             colorIndex: 5,
-            paletteIndex: index,
             }"
         ></palette-color>
       </div>
@@ -81,31 +76,23 @@ import { db } from '../firebase';
 
 export default {
   name: 'CreatePalette',
-  created() {
-    this.addNewUserPalette(this.user);
-  },
-  destroyed() {
-    this.clearUserPalettes();
-  },
   components: {
     PaletteColor,
   },
   computed: {
     ...mapState({
-      palette: state => state.userPalettes[0],
+      palette: 'newPalette',
       user: 'currentUser',
     }),
   },
   data() {
     return {
-      index: 0,
       editMode: true,
     };
   },
   methods: {
     ...mapActions({
-      addNewUserPalette: 'addNewUserPalette',
-      clearUserPalettes: 'clearUserPalettes',
+      resetNewPaletteColors: 'resetNewPaletteColors',
     }),
     cancelCreating() {
       /* eslint-disable */
@@ -121,9 +108,10 @@ export default {
       /* eslint-enable */
       if (isAdd) {
         const newPaletteRef = db.ref(`authors/${this.user.uid}`).push();
-        newPaletteRef.set({ ...this.palette, public: null })
+        newPaletteRef.set({ ...this.palette, author: this.user })
           .then(() => {
             this.$router.push('/my-palettes');
+            this.resetNewPaletteColors();
           });
       }
     },
