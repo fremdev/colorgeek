@@ -36,15 +36,11 @@
         class="menu-item"
         activeClass="menu-item--active"
       >Popular</router-link>
-      <span
-        class="menu-item"
-        @click="addPalette"
-      >Add New</span>
       <router-link
         to="/create"
         class="menu-item"
         activeClass="menu-item--active"
-      >Create</router-link>
+      >Create New</router-link>
       <span
         class="menu-item"
         @click="onLogout"

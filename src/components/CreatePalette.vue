@@ -77,8 +77,10 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 import PaletteColor from './Color';
+import { db } from '../firebase';
 
 export default {
+  name: 'CreatePalette',
   created() {
     this.addNewUserPalette(this.user);
   },
@@ -106,10 +108,24 @@ export default {
       clearUserPalettes: 'clearUserPalettes',
     }),
     cancelCreating() {
-      console.log('cancelled');
+      /* eslint-disable */
+      const isCancel = confirm('Are you sure cancel creating without saving?');
+      /* eslint-enable */
+      if (isCancel) {
+        this.$router.push('/my-palettes');
+      }
     },
     createPalette() {
-      console.log('created');
+      /* eslint-disable */
+      const isAdd = confirm('Do you want to add the palette to your palettes?');
+      /* eslint-enable */
+      if (isAdd) {
+        const newPaletteRef = db.ref(`authors/${this.user.uid}`).push();
+        newPaletteRef.set({ ...this.palette, public: null })
+          .then(() => {
+            this.$router.push('/my-palettes');
+          });
+      }
     },
   },
 };
