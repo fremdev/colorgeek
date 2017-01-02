@@ -38,5 +38,23 @@ export default {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    padding-top: 102px;
+  }
+  @media (max-width: 800px) {
+    .palette-container {
+      padding-top: 126px;
+    }
+  }
+
+  @media (max-width: 580px) {
+    .palette-container {
+      padding-top: 82px;
+    }
+  }
+
+  @media (max-width: 505px) {
+    .palette-container {
+      padding-top: 100px;
+    }
   }
 </style>

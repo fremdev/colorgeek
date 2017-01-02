@@ -62,4 +62,23 @@ export default {
     margin-bottom: -3px;
     margin-left: 10px;
   }
+  @media (max-width: 800px) {
+    .controls {
+      flex: 0 1 100%;
+      display: flex;
+      justify-content: center;
+    }
+    .controls__type {
+      margin-right: 50px;
+    }
+  }
+
+  @media (max-width: 450px) {
+    .controls {
+      font-size: 14px;
+    }
+    .controls__type {
+      margin-right: 10px;
+    }
+  }
 </style>

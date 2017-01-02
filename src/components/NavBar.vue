@@ -95,4 +95,16 @@ export default {
   .menu-status {
     margin-right: 10px;
   }
+
+  @media (max-width: 580px) {
+    .menu-status {
+      display: none;
+    }
+  }
+  @media (max-width: 505px) {
+    .navigation {
+      flex: 0 1 100%;
+      text-align: center;
+    }
+  }
 </style>
