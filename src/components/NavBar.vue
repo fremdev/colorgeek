@@ -12,15 +12,28 @@
         activeClass="menu-item--active"
       >Sign In</router-link>
     </span>
-    <span v-else>
+    <span v-if="user.nickname">
       <span
         class="menu-status"
       >Logged as {{ user.nickname }}</span>
+    </span>
+    <span v-if="user.nickname">
       <router-link
         to="/my-palettes"
         class="menu-item"
         activeClass="menu-item--active"
       >My Palettes</router-link>
+      <router-link
+        to="/create"
+        class="menu-item"
+        activeClass="menu-item--active"
+      >Create New</router-link>
+      <span
+        class="menu-item"
+        @click="onLogout"
+      >Log Out</span>
+    </span>
+    <span>
       <router-link
         to="/public"
         class="menu-item"
@@ -36,15 +49,6 @@
         class="menu-item"
         activeClass="menu-item--active"
       >Popular</router-link>
-      <router-link
-        to="/create"
-        class="menu-item"
-        activeClass="menu-item--active"
-      >Create New</router-link>
-      <span
-        class="menu-item"
-        @click="onLogout"
-      >Log Out</span>
     </span>
   </div>
 </template>
@@ -76,7 +80,8 @@ export default {
 
 <style scoped>
   .navigation {
-    padding: 10px 20px;
+    display: flex;
+    flex-direction: column;
   }
   .menu-item {
     margin-right: 10px;

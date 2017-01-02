@@ -95,7 +95,13 @@ const actions = {
           })
           .then(() => {
             if(isPublic) {
-              db.ref(`public/${key}/likes`).set(newLikesNum);
+              db.ref(`public/${key}/likes`).once('value')
+                .then((data) => {
+                  console.log(data.val());
+                  if(data.val() !== null) {
+                    db.ref(`public/${key}/likes`).set(newLikesNum);
+                  }
+                });
             }
           });
       });
