@@ -6,11 +6,16 @@ import {
   CLEAR_PUBLIC_PALETTES,
   ADD_PUBLIC_PALETTES_TO_END,
   SET_PALETTES_WAS_ADDED,
+  START_LOADING_PUBLIC,
+  STOP_LOADING_PUBLIC,
+  SET_NO_MORE_PALETTES,
 } from './mutation-types';
 
 const state = {
   palettes: [],
   palettesWasAdded: 0,
+  isLoading: false,
+  isNoMorePalettes: false,
 };
 
 const mutations = {
@@ -19,7 +24,9 @@ const mutations = {
   },
   [CLEAR_PUBLIC_PALETTES] (state) {
     state.palettes.length = 0;
-    state.palettesWasAdded = 0;
+    // state.palettes.length = 0;
+    // state.palettesWasAdded = 0;
+    // state.isLoading = false;
   },
   [UPDATE_PUBLIC_PALETTE_LIKES] (state, palette) {
     state.palettes[palette.index].likes = palette.likes;
@@ -27,13 +34,24 @@ const mutations = {
   },
   [ADD_PUBLIC_PALETTES_TO_END] (state, palettes) {
     state.palettes.push(...palettes);
+    // state.isLoading = false;
   },
   [SET_PALETTES_WAS_ADDED] (state, value) {
     state.palettesWasAdded = value;
   },
+  [START_LOADING_PUBLIC] (state) {
+    state.isLoading = true;
+  },
+  [STOP_LOADING_PUBLIC] (state) {
+    state.isLoading = false;
+  },
+  [SET_NO_MORE_PALETTES] (state) {
+    state.isNoMorePalettes = true;
+  },
 };
 
 const addPalettesToEnd = ({ commit }, { uid, likes, endKey, palettesNum }, dbRef) => {
+  commit(START_LOADING_PUBLIC);
   const nextPalettes = [];
   dbRef.on('child_added', (data) => {
     const palette = data.val();
@@ -45,12 +63,17 @@ const addPalettesToEnd = ({ commit }, { uid, likes, endKey, palettesNum }, dbRef
       });
     } else {
       commit(ADD_PUBLIC_PALETTES_TO_END, nextPalettes);
+      commit(STOP_LOADING_PUBLIC);
+      if(nextPalettes.length === 0) {
+        commit(SET_NO_MORE_PALETTES);
+      }
     }
   });
 }
 
 const actions = {
   loadPublicPalettes({ commit, state }, palettesNum) {
+    commit(START_LOADING_PUBLIC);
     const publicRef = db.ref('public').orderByKey().limitToLast(palettesNum);
     db.ref('public').off();
     commit(SET_PALETTES_WAS_ADDED, 0);
@@ -58,7 +81,6 @@ const actions = {
     let startKey;
     publicRef.on('child_added', (data) => {
       count += 1;
-      if(count === palettesNum) { startKey = data.key; }
       if (count <= palettesNum) {
         const palette = data.val();
         const key = data.key;
@@ -66,6 +88,10 @@ const actions = {
           ...palette,
           key,
         });
+        if(count === palettesNum) {
+          startKey = data.key;
+          commit(STOP_LOADING_PUBLIC);
+        }
       } else {
         db.ref('public').off();
         let addedCount = 0;
@@ -80,7 +106,9 @@ const actions = {
     });
   },
   loadPickedPalettes({ commit, state }, palettesNum) {
+    commit(START_LOADING_PUBLIC);
     const pickedRef = db.ref('public').orderByChild('picked').equalTo(true).limitToLast(palettesNum);
+    db.ref('public').off();
     let count = 0;
     pickedRef.on('child_added', (data) => {
       count += 1;
@@ -91,11 +119,14 @@ const actions = {
           ...palette,
           key,
         });
+        if(count === palettesNum) { commit(STOP_LOADING_PUBLIC); };
       }
     });
   },
   loadPopularPalettes({ commit, state }, palettesNum) {
+    commit(START_LOADING_PUBLIC);
     const popularRef = db.ref('public').orderByChild('likes').limitToLast(palettesNum);
+    db.ref('public').off();
     let count = 0;
     popularRef.on('child_added', (data) => {
       count += 1;
@@ -106,6 +137,7 @@ const actions = {
           ...palette,
           key,
         });
+        if(count === palettesNum) { commit(STOP_LOADING_PUBLIC); };
       }
     });
   },
@@ -146,6 +178,7 @@ const actions = {
   },
   addPickedPalettesToEnd({ commit }, { uid, endKey, palettesNum }) {
     const pickedRef = db.ref('public').orderByChild('picked').endAt(true, endKey).limitToLast(palettesNum);
+    commit(START_LOADING_PUBLIC);
     const nextPalettes = [];
     pickedRef.on('child_added', (data) => {
       const palette = data.val();
@@ -157,6 +190,10 @@ const actions = {
         });
       } else {
         commit(ADD_PUBLIC_PALETTES_TO_END, nextPalettes);
+        commit(STOP_LOADING_PUBLIC);
+        if(nextPalettes.length === 0) {
+          commit(SET_NO_MORE_PALETTES);
+        }
       }
     });
   },

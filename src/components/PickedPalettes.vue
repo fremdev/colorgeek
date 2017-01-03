@@ -35,6 +35,11 @@ export default {
     this.clearPublicPalettes();
     window.removeEventListener('scroll', this.handleScroll);
   },
+  updated() {
+    if (this.isNoMorePalettes) {
+      window.removeEventListener('scroll', this.handleScroll);
+    }
+  },
   computed: {
     user() {
       return this.$store.state.currentUser;
@@ -42,6 +47,7 @@ export default {
     ...mapState({
       palettes: state => state.public.palettes,
       palettesWasAdded: state => state.public.palettesWasAdded,
+      isNoMorePalettes: state => state.public.isNoMorePalettes,
     }),
   },
   methods: {
