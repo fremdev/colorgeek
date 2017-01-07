@@ -123,6 +123,7 @@ export default {
 .palette-container {
   display: flex;
   justify-content: center;
+  padding-top: 102px;
 }
 .create-palette {
   background-color: #eee;
@@ -153,5 +154,23 @@ h5 {
 .controls {
   display: flex;
   justify-content: space-between;
+}
+
+@media (max-width: 800px) {
+  .palette-container {
+    padding-top: 126px;
+  }
+}
+
+@media (max-width: 580px) {
+  .palette-container {
+    padding-top: 82px;
+  }
+}
+
+@media (max-width: 505px) {
+  .palette-container {
+    padding-top: 100px;
+  }
 }
 </style>

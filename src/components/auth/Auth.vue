@@ -1,10 +1,6 @@
 <template>
-  <div class="container">
-    <div class="row">
-      <div class="offset-xs-1 col-xs-10 col-sm-4 offset-sm-4">
-        <router-view></router-view>
-      </div>
-    </div>
+  <div class="auth-container">
+    <router-view></router-view>
   </div>
 </template>
 
@@ -15,4 +11,26 @@ export default {
 </script>
 
 <style>
+.auth-container {
+  display: flex;
+  justify-content: center;
+  padding-top: 102px;
+}
+@media (max-width: 800px) {
+  .auth-container {
+    padding-top: 176px;
+  }
+}
+
+@media (max-width: 580px) {
+  .auth-container {
+    padding-top: 132px;
+  }
+}
+
+@media (max-width: 505px) {
+  .auth-container {
+    padding-top: 150px;
+  }
+}
 </style>

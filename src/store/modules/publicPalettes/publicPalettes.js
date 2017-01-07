@@ -24,9 +24,7 @@ const mutations = {
   },
   [CLEAR_PUBLIC_PALETTES] (state) {
     state.palettes.length = 0;
-    // state.palettes.length = 0;
-    // state.palettesWasAdded = 0;
-    // state.isLoading = false;
+    state.isNoMorePalettes = false;
   },
   [UPDATE_PUBLIC_PALETTE_LIKES] (state, palette) {
     state.palettes[palette.index].likes = palette.likes;
@@ -34,7 +32,6 @@ const mutations = {
   },
   [ADD_PUBLIC_PALETTES_TO_END] (state, palettes) {
     state.palettes.push(...palettes);
-    // state.isLoading = false;
   },
   [SET_PALETTES_WAS_ADDED] (state, value) {
     state.palettesWasAdded = value;

@@ -90,7 +90,8 @@
         v-else
       >
         <button class="btn btn-outline-primary"
-          @click="copyToMyPalettes"
+          @click="user.uid ? copyToMyPalettes() : undefined"
+          :disabled="!user.uid"
         >Copy to My Palettes</button>
       </div>
     </div>
