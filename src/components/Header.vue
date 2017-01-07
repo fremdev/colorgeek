@@ -27,7 +27,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
   .header {
     width: 100%;
     padding: 10px 20px 0px;
@@ -40,9 +40,16 @@ export default {
     color: #5454c5;
   }
 
+  .wrapper {
+    padding-top: 102px;
+  }
+
   @media (max-width: 800px) {
     .header {
       flex-wrap: wrap;
+    }
+    .wrapper {
+      padding-top: 126px;
     }
   }
 
@@ -52,6 +59,9 @@ export default {
     }
     .logo p {
       display: none;
+    }
+    .wrapper {
+      padding-top: 82px;
     }
   }
 
@@ -66,6 +76,9 @@ export default {
     }
     .header {
       padding: 0;
+    }
+    .wrapper {
+      padding-top: 100px;
     }
   }
 
