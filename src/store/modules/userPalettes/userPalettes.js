@@ -9,65 +9,75 @@ import {
   MAKE_PALETTE_PUBLIC,
   REMOVE_USER_PALETTE,
   ADD_USER_PALETTES_TO_END,
+  START_LOADING_PRIVATE,
+  STOP_LOADING_PRIVATE,
+  SET_NO_MORE_USER_PALETTES,
 } from './mutation-types';
 
-const state = [];
+const state = {
+  palettes: [],
+  isLoading: false,
+  isNoMorePalettes: false,
+};
 
 const mutations = {
   [ADD_USER_PALETTES] (state, palette) {
-    state.unshift(palette);
+    state.palettes.unshift(palette);
   },
   [CLEAR_USER_PALETTES] (state) {
-    state.length = 0;
+    state.palettes.length = 0;
+    state.isNoMorePalettes = false;
   },
   [UPDATE_USER_PALETTE_COLOR] (state, color) {
-    state[color.paletteIndex].colors[`color${color.colorIndex}`] = color.value;
+    state.palettes[color.paletteIndex].colors[`color${color.colorIndex}`] = color.value;
   },
   [UPDATE_USER_PALETTE_COLORS] (state, palette) {
-    state[palette.index].colors = palette.colors;
+    state.palettes[palette.index].colors = palette.colors;
   },
   [UPDATE_USER_PALETTE_LIKES] (state, palette) {
-    state[palette.index].likes = palette.likes;
-    state[palette.index].isLiked = palette.isLiked;
+    state.palettes[palette.index].likes = palette.likes;
+    state.palettes[palette.index].isLiked = palette.isLiked;
   },
   [MAKE_PALETTE_PUBLIC] (state, index) {
-    state[index].public = true;
+    state.palettes[index].public = true;
   },
   [REMOVE_USER_PALETTE] (state, index) {
-    state.splice(index, 1);
+    state.palettes.splice(index, 1);
   },
   [ADD_USER_PALETTES_TO_END] (state, palettes) {
-    state.push(...palettes);
+    state.palettes.push(...palettes);
+  },
+  [START_LOADING_PRIVATE] (state) {
+    state.isLoading = true;
+  },
+  [STOP_LOADING_PRIVATE] (state) {
+    state.isLoading = false;
+  },
+  [SET_NO_MORE_USER_PALETTES] (state) {
+    state.isNoMorePalettes = true;
   },
 };
 
 const actions = {
   loadUserPalettes({ commit }, { uid, palettesNum }) {
+    commit(START_LOADING_PRIVATE);
     const userPalettesRef = db.ref(`authors/${uid}`).orderByKey().limitToLast(palettesNum);
     db.ref(`authors/${uid}`).off();
+    let count = 0;
     userPalettesRef.on('child_added', (data) => {
+      count += 1;
       const palette = data.val();
       const key = data.key;
-      commit(ADD_USER_PALETTES,
-        { public: false,
-          ...palette,
-          key,
-        });
+      commit(ADD_USER_PALETTES, {
+        public: false,
+        ...palette,
+        key,
+      });
+      if(count === palettesNum) {
+        db.ref(`authors/${uid}`).off();
+        commit(STOP_LOADING_PRIVATE);
+      }
     });
-  },
-  addNewUserPalette({ commit }, user) {
-    const initialPalette = {
-      colors: {
-        color1: 'ffffff',
-        color2: 'ffffff',
-        color3: 'ffffff',
-        color4: 'ffffff',
-        color5: 'ffffff',
-      },
-      likes: 0,
-      author: user,
-    };
-    commit(ADD_USER_PALETTES, { ...initialPalette, public: false });
   },
   updateUserPaletteColor({ commit }, color) {
     commit(UPDATE_USER_PALETTE_COLOR, color);
@@ -129,8 +139,11 @@ const actions = {
   clearUserPalettes({ commit }) {
     commit(CLEAR_USER_PALETTES);
   },
-  addUserPalettesToEnd({ commit }, { uid, endKey, palettesNum }) {
+  addUserPalettesToEnd({ commit, state }, { uid, endKey, palettesNum }) {
     db.ref(`authors/${uid}`).off();
+    if(!state.isLoading) {
+      commit(START_LOADING_PRIVATE);
+    }
     const nextPalettes = [];
     db.ref(`authors/${uid}`).orderByKey().endAt(endKey).limitToLast(palettesNum)
     .on('child_added', (data) => {
@@ -143,6 +156,10 @@ const actions = {
         });
       } else {
         commit(ADD_USER_PALETTES_TO_END, nextPalettes);
+        commit(STOP_LOADING_PRIVATE);
+        if(nextPalettes.length === 0) {
+          commit(SET_NO_MORE_USER_PALETTES);
+        }
       }
     });
   },

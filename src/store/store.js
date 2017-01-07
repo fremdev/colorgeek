@@ -24,7 +24,7 @@ export default new Vuex.Store({
     errorMessage: '',
   },
   modules: {
-    userPalettes,
+    private: userPalettes,
     public: publicPalettes,
     newPalette,
   },

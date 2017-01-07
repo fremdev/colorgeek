@@ -11,7 +11,7 @@
         ></palette-item>
     </div>
     <div class="loader">
-      <rotate-loader :loading="isLoading"></rotate-loader>
+      <rotate-loader :loading="isLoadingPublic || isLoadingPrivate"></rotate-loader>
     </div>
   </div>
 
@@ -41,7 +41,8 @@ export default {
   },
   computed: {
     ...mapState({
-      isLoading: state => state.public.isLoading,
+      isLoadingPublic: state => state.public.isLoading,
+      isLoadingPrivate: state => state.private.isLoading,
     }),
   },
 };

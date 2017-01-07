@@ -33,7 +33,7 @@ export default {
       return this.$store.state.currentUser;
     },
     ...mapState({
-      palettes: 'userPalettes',
+      palettes: state => state.private.palettes,
     }),
   },
   methods: {
