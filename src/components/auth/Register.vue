@@ -40,6 +40,7 @@
 
 <script>
 import firebase from 'firebase';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'Login',
@@ -48,9 +49,18 @@ export default {
       nickname: '',
       email: '',
       password: '',
+      isError: false,
     };
   },
+  destroyed() {
+    if (this.isError) {
+      this.setErrorMessage('');
+    }
+  },
   methods: {
+    ...mapActions({
+      setErrorMessage: 'setErrorMessage',
+    }),
     createUser() {
       firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
       .then((user) => {
@@ -59,7 +69,8 @@ export default {
         });
       })
       .catch((error) => {
-        console.log('Registration error:', error.message);
+        this.setErrorMessage(error.message);
+        this.isError = true;
       });
     },
   },

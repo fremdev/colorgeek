@@ -30,6 +30,7 @@
 
 <script>
 import firebase from 'firebase';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'Login',
@@ -37,13 +38,23 @@ export default {
     return {
       email: '',
       password: '',
+      isError: false,
     };
   },
+  destroyed() {
+    if (this.isError) {
+      this.setErrorMessage('');
+    }
+  },
   methods: {
+    ...mapActions({
+      setErrorMessage: 'setErrorMessage',
+    }),
     tryLogin() {
       firebase.auth().signInWithEmailAndPassword(this.email, this.password)
         .catch((error) => {
-          console.log('Login error:', error.message);
+          this.setErrorMessage(error.message);
+          this.isError = true;
         });
     },
   },

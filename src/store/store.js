@@ -10,6 +10,7 @@ import {
   CLEAR_CURRENT_USER,
   SET_COLOR_TYPE,
   SET_SELECTED_COLOR,
+  SET_ERROR_MESSAGE,
 } from './mutation-types';
 
 Vue.use(Vuex);
@@ -20,6 +21,7 @@ export default new Vuex.Store({
     currentUser: {},
     colorType: 'hex',
     selectedColor: '',
+    errorMessage: '',
   },
   modules: {
     userPalettes,
@@ -39,6 +41,9 @@ export default new Vuex.Store({
     [SET_SELECTED_COLOR](state, color) {
       state.selectedColor = color;
     },
+    [SET_ERROR_MESSAGE](state, message) {
+      state.errorMessage = message;
+    },
   },
   actions: {
     setCurrentUser({ commit }, user) {
@@ -52,6 +57,9 @@ export default new Vuex.Store({
     },
     setSelectedColor({ commit }, color) {
       commit(SET_SELECTED_COLOR, color);
+    },
+    setErrorMessage({ commit }, message) {
+      commit(SET_ERROR_MESSAGE, message);
     },
   },
 });
