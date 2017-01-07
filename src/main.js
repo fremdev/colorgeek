@@ -12,6 +12,11 @@ Vue.use(VueFire);
 
 const router = new VueRouter({
   routes,
+  mode: 'history',
+  /* eslint-disable no-unused-vars */
+  scrollBehavior(to, from, savedPosition) {
+    return { x: 0, y: 0 };
+  },
 });
 
 router.beforeEach((to, from, next) => {

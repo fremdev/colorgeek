@@ -43,7 +43,9 @@ const mutations = {
 
 const actions = {
   loadUserPalettes({ commit }, { uid, palettesNum }) {
-    db.ref(`authors/${uid}`).orderByKey().limitToLast(palettesNum).on('child_added', (data) => {
+    const userPalettesRef = db.ref(`authors/${uid}`).orderByKey().limitToLast(palettesNum);
+    db.ref(`authors/${uid}`).off();
+    userPalettesRef.on('child_added', (data) => {
       const palette = data.val();
       const key = data.key;
       commit(ADD_USER_PALETTES,
@@ -97,7 +99,6 @@ const actions = {
             if(isPublic) {
               db.ref(`public/${key}/likes`).once('value')
                 .then((data) => {
-                  console.log(data.val());
                   if(data.val() !== null) {
                     db.ref(`public/${key}/likes`).set(newLikesNum);
                   }
@@ -129,6 +130,7 @@ const actions = {
     commit(CLEAR_USER_PALETTES);
   },
   addUserPalettesToEnd({ commit }, { uid, endKey, palettesNum }) {
+    db.ref(`authors/${uid}`).off();
     const nextPalettes = [];
     db.ref(`authors/${uid}`).orderByKey().endAt(endKey).limitToLast(palettesNum)
     .on('child_added', (data) => {

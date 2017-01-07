@@ -57,7 +57,8 @@ export default {
       addPickedPalettesToEnd: 'addPickedPalettesToEnd',
     }),
     handleScroll() {
-      if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+      if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight
+          && this.palettes[this.palettes.length - 1]) {
         this.addPickedPalettesToEnd({
           uid: this.user.uid,
           endKey: this.palettes[this.palettes.length - 1].key,
