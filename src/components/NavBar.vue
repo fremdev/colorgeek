@@ -84,13 +84,15 @@ export default {
     flex-direction: column;
   }
   .menu-item {
+    padding: 1px;
     margin-right: 10px;
-    color: #9988ff;
+    color: #fff;
     cursor: pointer;
   }
   .menu-item--active {
-    background-color: #9999ee;
-    color: #fff;
+    background-color: #99d3df;
+    color: #30415d;
+    font-weight: bold;
   }
   .menu-status {
     margin-right: 10px;

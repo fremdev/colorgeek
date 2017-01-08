@@ -97,7 +97,7 @@
     </div>
     <AdminControls
       :paletteKey="palette.key"
-      v-show="showAdminControls"
+      v-if="showAdminControls"
       ></AdminControls>
   </div>
 </template>
@@ -225,10 +225,11 @@ export default {
 
 <style scoped>
 .palette-item {
-  background-color: #eee;
+  background-color: #f9f9f9;
   display: inline-block;
   border-radius: 5px;
-  margin: 10px 10px 0;
+  margin: 20px 20px;
+  box-shadow: #52658f 3px 3px 10px;
 }
 
 .palette-item__row {
@@ -236,10 +237,12 @@ export default {
 }
 
 .palette-item__header {
+  background: #8295bf;
+  color: #fff;
   display: flex;
   justify-content: space-between;
   padding: 10px;
-  border-bottom: 1px solid #000;
+  border-bottom: 1px solid #52658f;
 }
 
 h5 {

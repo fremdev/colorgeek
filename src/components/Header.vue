@@ -34,10 +34,13 @@ export default {
     display: flex;
     justify-content: space-between;
     position: fixed;
+    background-color: #52658f;
+    color: #fff;
   }
   .logo__title {
     cursor: pointer;
-    color: #5454c5;
+    color: #99d3df;
+    text-shadow: #30415d 2px 2px 2px;
   }
 
   .wrapper {
@@ -49,7 +52,7 @@ export default {
       flex-wrap: wrap;
     }
     .wrapper {
-      padding-top: 126px;
+      padding-top: 131px;
     }
   }
 
@@ -61,7 +64,7 @@ export default {
       display: none;
     }
     .wrapper {
-      padding-top: 82px;
+      padding-top: 87px;
     }
   }
 
@@ -78,7 +81,7 @@ export default {
       padding: 0;
     }
     .wrapper {
-      padding-top: 100px;
+      padding-top: 105px;
     }
   }
 

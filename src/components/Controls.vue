@@ -54,6 +54,9 @@ export default {
 </script>
 
 <style>
+  .controls {
+    padding-bottom: 5px;
+  }
   .indicator {
     height: 20px;
     width: 20px;

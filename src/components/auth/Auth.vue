@@ -27,7 +27,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 102px;
+  padding-top: 152px;
 }
 @media (max-width: 800px) {
   .auth-container {
