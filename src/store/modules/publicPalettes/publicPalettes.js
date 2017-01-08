@@ -50,6 +50,7 @@ const mutations = {
 const addPalettesToEnd = ({ commit }, { uid, likes, endKey, palettesNum }, dbRef) => {
   commit(START_LOADING_PUBLIC);
   const nextPalettes = [];
+  db.ref('public').off();
   dbRef.on('child_added', (data) => {
     const palette = data.val();
     const key = data.key;
@@ -177,6 +178,7 @@ const actions = {
     const pickedRef = db.ref('public').orderByChild('picked').endAt(true, endKey).limitToLast(palettesNum);
     commit(START_LOADING_PUBLIC);
     const nextPalettes = [];
+    db.ref('public').off();
     pickedRef.on('child_added', (data) => {
       const palette = data.val();
       const key = data.key;

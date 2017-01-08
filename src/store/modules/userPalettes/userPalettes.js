@@ -64,18 +64,28 @@ const actions = {
     const userPalettesRef = db.ref(`authors/${uid}`).orderByKey().limitToLast(palettesNum);
     db.ref(`authors/${uid}`).off();
     let count = 0;
-    userPalettesRef.on('child_added', (data) => {
-      count += 1;
-      const palette = data.val();
-      const key = data.key;
-      commit(ADD_USER_PALETTES, {
-        public: false,
-        ...palette,
-        key,
-      });
-      if(count === palettesNum) {
+    userPalettesRef.once('value').then((data) => {
+      return data.numChildren();
+    }).then((responseLength) => {
+      if (responseLength) {
+        userPalettesRef.on('child_added', (data) => {
+          count += 1;
+          const palette = data.val();
+          const key = data.key;
+          commit(ADD_USER_PALETTES, {
+            public: false,
+            ...palette,
+            key,
+          });
+          if(count === responseLength) {
+            db.ref(`authors/${uid}`).off();
+            commit(STOP_LOADING_PRIVATE);
+          }
+        });
+      } else {
         db.ref(`authors/${uid}`).off();
         commit(STOP_LOADING_PRIVATE);
+        commit(SET_NO_MORE_USER_PALETTES);
       }
     });
   },

@@ -76,7 +76,7 @@ export default {
     }
   }
 
-  @media (max-width: 450px) {
+  @media (max-width: 466px) {
     .controls {
       font-size: 14px;
     }

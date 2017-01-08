@@ -1,5 +1,14 @@
 <template>
   <div class="wrapper">
+    <div
+      class="message"
+      v-if="isNoMorePalettes && palettes.length === 0">
+      You don't have any palettes yet.
+      <router-link
+        to="/create"
+        class="message__button"
+      >Create One</router-link>?
+    </div>
     <palette-container
       :user="user"
       :palettes="palettes"
@@ -34,6 +43,7 @@ export default {
     },
     ...mapState({
       palettes: state => state.private.palettes,
+      isNoMorePalettes: state => state.private.isNoMorePalettes,
     }),
   },
   methods: {
@@ -55,3 +65,16 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.message {
+  text-align: center;
+  margin-top: 30px;
+  font-size: 18px;
+}
+.message__button {
+  cursor: pointer;
+  color: #555599;
+  text-decoration: underline;
+}
+</style>
