@@ -13,7 +13,7 @@ import About from './components/About';
 export default [
   {
     path: '',
-    component: PopularPalettes,
+    redirect: '/popular',
   },
   {
     path: '/my-palettes',

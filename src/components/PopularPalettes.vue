@@ -19,7 +19,7 @@ export default {
     PaletteContainer,
   },
   created() {
-    this.loadPopularPalettes(3);
+    this.loadPopularPalettes(12);
     window.addEventListener('scroll', this.handleScroll);
   },
   destroyed() {
@@ -53,7 +53,7 @@ export default {
           uid: this.user.uid,
           likes: this.palettes[this.palettes.length - 1].likes,
           endKey: this.palettes[this.palettes.length - 1].key,
-          palettesNum: 3,
+          palettesNum: 7,
         });
       }
     },

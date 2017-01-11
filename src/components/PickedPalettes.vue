@@ -28,7 +28,7 @@ export default {
     PaletteContainer,
   },
   created() {
-    this.loadPickedPalettes(3);
+    this.loadPickedPalettes(12);
     window.addEventListener('scroll', this.handleScroll);
   },
   destroyed() {
@@ -62,7 +62,7 @@ export default {
         this.addPickedPalettesToEnd({
           uid: this.user.uid,
           endKey: this.palettes[this.palettes.length - 1].key,
-          palettesNum: 3,
+          palettesNum: 7,
         });
       }
     },

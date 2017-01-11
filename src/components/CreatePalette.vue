@@ -129,7 +129,7 @@ export default {
   background-color: #eee;
   display: inline-block;
   border-radius: 5px;
-  margin: 10px 10px 0;
+  margin: 50px 10px 0;
 }
 
 .create-palette__row {

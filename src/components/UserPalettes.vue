@@ -29,7 +29,7 @@ export default {
   created() {
     this.loadUserPalettes({
       uid: this.user.uid,
-      palettesNum: 3,
+      palettesNum: 12,
     });
     window.addEventListener('scroll', this.handleScroll);
   },
@@ -58,7 +58,7 @@ export default {
         this.addUserPalettesToEnd({
           uid: this.user.uid,
           endKey: this.palettes[this.palettes.length - 1].key,
-          palettesNum: 3,
+          palettesNum: 7,
         });
       }
     },
