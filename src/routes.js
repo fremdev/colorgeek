@@ -8,6 +8,8 @@ import Auth from './components/auth/Auth';
 import Register from './components/auth/Register';
 import Login from './components/auth/Login';
 
+import About from './components/About';
+
 export default [
   {
     path: '',
@@ -33,6 +35,10 @@ export default [
   {
     path: '/create',
     component: CreatePalette,
+  },
+  {
+    path: '/about',
+    component: About,
   },
   {
     path: '/auth',

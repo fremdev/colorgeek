@@ -49,6 +49,11 @@
         class="menu-item"
         activeClass="menu-item--active"
       >Popular</router-link>
+      <router-link
+        to="/about"
+        class="menu-item"
+        activeClass="menu-item--active"
+      >About</router-link>
     </span>
   </div>
 </template>
