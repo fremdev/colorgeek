@@ -35,6 +35,7 @@ export default [
   {
     path: '/create',
     component: CreatePalette,
+    meta: { requiresAuth: true },
   },
   {
     path: '/about',

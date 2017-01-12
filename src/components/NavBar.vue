@@ -35,6 +35,11 @@
     </span>
     <span>
       <router-link
+        to="/popular"
+        class="menu-item"
+        activeClass="menu-item--active"
+      >Popular</router-link>
+      <router-link
         to="/public"
         class="menu-item"
         activeClass="menu-item--active"
@@ -44,11 +49,6 @@
         class="menu-item"
         activeClass="menu-item--active"
       >Picked</router-link>
-      <router-link
-        to="/popular"
-        class="menu-item"
-        activeClass="menu-item--active"
-      >Popular</router-link>
       <router-link
         to="/about"
         class="menu-item"

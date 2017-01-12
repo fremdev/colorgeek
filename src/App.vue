@@ -20,7 +20,6 @@ export default {
       // User is signed in.
       if (user) {
         this.setCurrentUser({ nickname: user.displayName, uid: user.uid });
-        this.$router.push('/');
       } else {
         // No user is signed in.
         this.clearCurrentUser();
