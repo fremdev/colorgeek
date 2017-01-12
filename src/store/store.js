@@ -18,7 +18,10 @@ Vue.use(Vuex);
 /* eslint-disable no-param-reassign */
 export default new Vuex.Store({
   state: {
-    currentUser: {},
+    currentUser: {
+      uid: '',
+      nickname: '',
+    },
     colorType: 'hex',
     selectedColor: '',
     errorMessage: '',
@@ -30,10 +33,16 @@ export default new Vuex.Store({
   },
   mutations: {
     [SET_CURRENT_USER](state, user) {
-      state.currentUser = user;
+      state.currentUser.uid = user.uid;
+      if (user.nickname) {
+        state.currentUser.nickname = user.nickname;
+      }
     },
     [CLEAR_CURRENT_USER](state) {
-      state.currentUser = {};
+      state.currentUser = {
+        uid: '',
+        nickname: '',
+      };
     },
     [SET_COLOR_TYPE](state, value) {
       state.colorType = value;

@@ -60,6 +60,7 @@ export default {
   methods: {
     ...mapActions({
       setErrorMessage: 'setErrorMessage',
+      setCurrentUser: 'setCurrentUser',
     }),
     createUser() {
       firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
@@ -67,6 +68,7 @@ export default {
         user.updateProfile({
           displayName: this.nickname,
         });
+        this.setCurrentUser({ nickname: this.nickname, uid: user.uid });
       })
       .catch((error) => {
         this.setErrorMessage(error.message);
