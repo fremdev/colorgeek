@@ -10,11 +10,11 @@
         <li>Guests have to register for being able to create, share and like palettes</li>
         <li>User can create private palettes, share best palettes with other users.</li>
         <li>User can like palettes, and palettes with the biggest number of likes are available on Popular page.</li>
-        <li>Palettes picked by admin are showing on Picked page</li>
+        <li>Palettes picked by admin are showing on Picked page.</li>
         <li>It's possible to edit and save private palettes.</li>
         <li>User can make a copy of any public palette to user's palettes.</li>
         <li>On click on a color cell selected color's value is copying to clipboard.</li>
-        <li>It's possible to choose color mode: hex(default) or rgb</li>
+        <li>It's possible to choose color mode: hex(default) or rgb.</li>
       </ul>
     </section>
     <section>

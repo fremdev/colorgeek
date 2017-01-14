@@ -1,6 +1,8 @@
-# colorgeek
+# ColorGeek
 
-> Make your palette on ColorGeek and share it with community
+> ColorGeek: Make your color palette & share it with community
+
+Project live on [https://colorgeek.pw/](https://colorgeek.pw/)
 
 ## Build Setup
 
@@ -13,12 +15,27 @@ npm run dev
 
 # build for production with minification
 npm run build
-
-# run unit tests
-npm run unit
-
-# run all tests
-npm test
 ```
+##About
 
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+ColorGeek is a web application for creating and sharing color palettes.
+
+* Guests have to register for being able to create, share and like palettes
+* User can create private palettes, share best palettes with other users.
+* User can like palettes, and palettes with the biggest number of likes are available on Popular page.
+* Palettes picked by admin are showing on Picked page.
+* It's possible to edit and save private palettes.
+* User can make a copy of any public palette to user's palettes.
+* On click on a color cell selected color's value is copying to clipboard.
+* It's possible to choose color mode: hex(default) or rgb.
+
+##Technologies
+
+Main technologies used for ColorGeek development are:
+
+* Vue.js 2 - progressive JavaScript framework
+* Vue-router for app routing
+* Vuex for state management
+* Vue-cli for scaffolding project
+* Firebase for authentification and realtime database
+* And other libraries and tools: Clipboard.js, Webpack, Babel, ESLint, etc.
