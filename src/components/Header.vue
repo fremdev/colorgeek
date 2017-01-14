@@ -29,6 +29,7 @@ export default {
 
 <style>
   .header {
+    z-index: 100;
     width: 100%;
     padding: 10px 20px 0px;
     display: flex;

@@ -57,7 +57,7 @@ export default {
       addPublicPalettesToEnd: 'addPublicPalettesToEnd',
     }),
     handleScroll() {
-      if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight
+      if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight
           && this.palettes[this.palettes.length - 1]) {
         this.addPublicPalettesToEnd({
           uid: this.user.uid,
