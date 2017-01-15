@@ -86,4 +86,10 @@ export default {
     }
   }
 
+  @media (max-width: 359px) {
+    .wrapper {
+      padding-top: 131px;
+    }
+  }
+
 </style>

@@ -84,4 +84,11 @@ export default {
       margin-right: 10px;
     }
   }
+
+  @media (max-width: 359px) {
+    .controls {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
 </style>

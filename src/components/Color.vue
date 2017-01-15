@@ -92,4 +92,14 @@ export default {
   position: relative;
   flex: 1 1 0px;
 }
+
+@media (max-width: 400px) {
+  .palette-item__color, .color-picker {
+    height: 80px;
+    width: 80px;
+  }
+  .palette-item__color--big, .color-picker--big {
+    width: 130px;
+  }
+}
 </style>

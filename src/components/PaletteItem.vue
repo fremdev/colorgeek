@@ -281,4 +281,10 @@ h5 {
   font-size: 28px;
   line-height: 32px;
 }
+
+@media (max-width: 400px) {
+  .palette-item__footer {
+    padding: 10px 10px;
+  }
+}
 </style>

@@ -52,7 +52,7 @@
       </div>
       <div class="create-palette__footer">
         <div
-          class="controls"
+          class="palette__controls"
         >
           <button
             class="btn btn-outline-primary"
@@ -151,7 +151,7 @@ h5 {
   padding: 10px 20px;
 }
 
-.controls {
+.palette__controls {
   display: flex;
   justify-content: space-between;
 }
