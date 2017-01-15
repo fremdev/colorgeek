@@ -161,6 +161,7 @@ const actions = {
       const key = data.key;
       if (key !== endKey) {
         nextPalettes.unshift({
+          public: false,
           ...palette,
           key,
         });
