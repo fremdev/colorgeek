@@ -3,7 +3,7 @@
     v-if="!editMode"
     :class="['palette-item__color', {'palette-item__color--big': isBig}]"
     :style="{backgroundColor: '#' + color.value}"
-    :data-clipboard-text="selectedColor"
+    :data-clipboard-text="colorType === 'hex' ? '#' + color.value : rgbColor"
   ></div>
   <div v-else
     :class="['color-picker', {'color-picker--big': isBig}]"
@@ -16,6 +16,7 @@
 
 <script>
 import { mapActions } from 'vuex';
+import { hexToRgb } from '../helpers';
 
 export default {
   name: 'Color',
@@ -34,8 +35,11 @@ export default {
     },
   },
   computed: {
-    selectedColor() {
-      return this.$store.state.selectedColor;
+    colorType() {
+      return this.$store.state.colorType;
+    },
+    rgbColor() {
+      return hexToRgb(this.color.value);
     },
   },
   methods: {
